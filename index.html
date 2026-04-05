@@ -1,0 +1,1102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SKY Smart Home Architect - Smart Gate Entrance & Parcel Delivery System Proposal</title>
+    <style>
+        :root {
+            --primary: #1a1a2e;
+            --accent: #e94560;
+            --accent2: #0f3460;
+            --light: #f5f5f7;
+            --dark: #16213e;
+            --card-bg: #ffffff;
+            --text: #333333;
+            --text-light: #666666;
+            --border: #e0e0e0;
+            --gradient: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+            --ux1: #7c4dff;
+            --ux1-bg: #ede7f6;
+            --ux2: #2979ff;
+            --ux2-bg: #e3f2fd;
+            --ux3: #ff6d00;
+            --ux3-bg: #fff3e0;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, sans-serif;
+            color: var(--text);
+            background: var(--light);
+            line-height: 1.6;
+        }
+
+        /* ── Header / Hero ── */
+        .hero {
+            background: var(--gradient);
+            color: #fff;
+            padding: 60px 0 80px;
+            position: relative;
+            overflow: hidden;
+        }
+        .hero::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 0; right: 0;
+            height: 80px;
+            background: var(--light);
+            clip-path: ellipse(55% 100% at 50% 100%);
+        }
+        .hero-inner {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 0 30px;
+            position: relative;
+            z-index: 1;
+        }
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            margin-bottom: 50px;
+        }
+        .brand-name { font-size: 24px; font-weight: 700; letter-spacing: 1px; }
+        .brand-name span { color: var(--accent); }
+        .hero h1 {
+            font-size: clamp(28px, 5vw, 48px);
+            font-weight: 800; line-height: 1.15; margin-bottom: 18px;
+        }
+        .hero h1 em { font-style: normal; color: var(--accent); }
+        .hero p.subtitle {
+            font-size: 18px; opacity: 0.85;
+            max-width: 620px; margin-bottom: 30px;
+        }
+        .badge-row { display: flex; flex-wrap: wrap; gap: 10px; }
+        .badge {
+            background: rgba(255,255,255,0.12);
+            border: 1px solid rgba(255,255,255,0.2);
+            padding: 6px 16px; border-radius: 20px;
+            font-size: 13px; font-weight: 600;
+            backdrop-filter: blur(4px);
+        }
+
+        /* ── Common ── */
+        .container { max-width: 1100px; margin: 0 auto; padding: 0 30px; }
+        section { padding: 70px 0; }
+        .section-label {
+            display: inline-block;
+            color: #fff; font-size: 11px; font-weight: 700;
+            letter-spacing: 2px; text-transform: uppercase;
+            padding: 4px 14px; border-radius: 4px; margin-bottom: 14px;
+        }
+        .section-label.ux1 { background: var(--ux1); }
+        .section-label.ux2 { background: var(--ux2); }
+        .section-label.ux3 { background: var(--ux3); }
+        .section-label.default { background: var(--accent); }
+        .section-title {
+            font-size: clamp(24px, 3.5vw, 36px);
+            font-weight: 800; color: var(--primary); margin-bottom: 10px;
+        }
+        .section-desc {
+            color: var(--text-light); font-size: 16px;
+            max-width: 700px; margin-bottom: 40px;
+        }
+        .alt-bg { background: #fff; }
+
+        /* ── UX Story Header ── */
+        .ux-header {
+            border-radius: 20px;
+            padding: 40px 36px;
+            margin-bottom: 40px;
+            color: #fff;
+            position: relative;
+            overflow: hidden;
+        }
+        .ux-header.ux1 { background: linear-gradient(135deg, #5e35b1, #7c4dff); }
+        .ux-header.ux2 { background: linear-gradient(135deg, #1565c0, #42a5f5); }
+        .ux-header.ux3 { background: linear-gradient(135deg, #e65100, #ff9800); }
+        .ux-header .ux-number {
+            font-size: 72px; font-weight: 900; opacity: 0.15;
+            position: absolute; right: 30px; top: -8px; line-height: 1;
+        }
+        .ux-header h2 { font-size: 28px; font-weight: 800; margin-bottom: 6px; }
+        .ux-header p { font-size: 15px; opacity: 0.9; max-width: 550px; }
+
+        /* ── Gallery ── */
+        .gallery-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 16px; margin-bottom: 20px;
+        }
+        .gallery-grid img {
+            width: 100%; height: 220px; object-fit: cover;
+            border-radius: 12px; border: 1px solid var(--border);
+            transition: transform 0.3s; cursor: pointer;
+        }
+        .gallery-grid img:hover { transform: scale(1.02); }
+        .gallery-caption {
+            text-align: center; font-size: 13px;
+            color: var(--text-light); margin-top: 6px;
+        }
+
+        /* ── Cards ── */
+        .card-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(310px, 1fr));
+            gap: 24px;
+        }
+        .card {
+            background: var(--card-bg); border-radius: 16px;
+            padding: 32px 28px; border: 1px solid var(--border);
+            transition: box-shadow 0.3s, transform 0.3s;
+        }
+        .card:hover {
+            box-shadow: 0 12px 40px rgba(0,0,0,0.08);
+            transform: translateY(-3px);
+        }
+        .card-icon {
+            width: 52px; height: 52px; border-radius: 14px;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 26px; margin-bottom: 18px;
+        }
+        .card h3 { font-size: 18px; font-weight: 700; color: var(--primary); margin-bottom: 8px; }
+        .card p { color: var(--text-light); font-size: 14px; line-height: 1.65; }
+        .card ul { list-style: none; padding: 0; margin-top: 12px; }
+        .card ul li {
+            position: relative; padding-left: 20px;
+            margin-bottom: 6px; font-size: 14px; color: var(--text-light);
+        }
+        .card ul li::before {
+            content: ''; position: absolute; left: 0; top: 8px;
+            width: 8px; height: 8px; border-radius: 50%;
+        }
+        .ux1-bullets li::before { background: var(--ux1); }
+        .ux2-bullets li::before { background: var(--ux2); }
+        .ux3-bullets li::before { background: var(--ux3); }
+        .default-bullets li::before { background: var(--accent); }
+
+        .icon-parcel { background: var(--ux1-bg); color: var(--ux1); }
+        .icon-car { background: var(--ux2-bg); color: var(--ux2); }
+        .icon-intercom { background: var(--ux3-bg); color: var(--ux3); }
+        .icon-key { background: #e8f5e9; color: #2e7d32; }
+        .icon-face { background: #fce4ec; color: #e91e63; }
+        .icon-wire { background: #f3e5f5; color: #9c27b0; }
+        .icon-cam { background: #e3f2fd; color: #2979ff; }
+        .icon-ctrl { background: #fff3e0; color: #ff6d00; }
+
+        /* ── Scenario Box ── */
+        .scenario {
+            background: var(--card-bg);
+            border-radius: 16px;
+            padding: 32px;
+            border: 1px solid var(--border);
+            margin-bottom: 24px;
+        }
+        .scenario-steps {
+            display: flex; flex-wrap: wrap;
+            gap: 16px; margin-top: 16px;
+        }
+        .step {
+            flex: 1; min-width: 180px;
+            background: var(--light);
+            border-radius: 12px;
+            padding: 20px 18px;
+            text-align: center;
+            position: relative;
+        }
+        .step-num {
+            width: 28px; height: 28px; border-radius: 50%;
+            display: inline-flex; align-items: center; justify-content: center;
+            font-size: 13px; font-weight: 800; color: #fff;
+            margin-bottom: 10px;
+        }
+        .step-num.ux1 { background: var(--ux1); }
+        .step-num.ux2 { background: var(--ux2); }
+        .step-num.ux3 { background: var(--ux3); }
+        .step h4 { font-size: 13px; font-weight: 700; color: var(--primary); margin-bottom: 4px; }
+        .step p { font-size: 12px; color: var(--text-light); }
+        .step-arrow {
+            position: absolute; right: -14px; top: 50%;
+            transform: translateY(-50%); font-size: 18px;
+            color: var(--text-light); z-index: 1;
+        }
+
+        /* ── Keypad Table ── */
+        .keypad-table {
+            width: 100%; border-collapse: collapse;
+            margin-top: 20px; border-radius: 12px;
+            overflow: hidden; border: 1px solid var(--border);
+        }
+        .keypad-table thead { background: var(--primary); color: #fff; }
+        .keypad-table th, .keypad-table td { padding: 14px 20px; text-align: left; font-size: 14px; }
+        .keypad-table tbody tr:nth-child(even) { background: #f9f9fb; }
+        .keypad-table tbody tr:hover { background: #f0f0f5; }
+        .pin-code {
+            font-family: 'Courier New', monospace;
+            font-weight: 700; font-size: 16px;
+            color: var(--accent); letter-spacing: 3px;
+        }
+
+        /* ── Panel Layout Diagram ── */
+        .panel-diagram {
+            display: grid; grid-template-columns: 140px 1fr;
+            gap: 0; max-width: 520px; margin: 30px auto;
+            border: 3px solid var(--primary); border-radius: 14px;
+            overflow: hidden; background: #e8e8ee;
+        }
+        .panel-left {
+            display: grid; grid-template-rows: 1fr 1fr 1fr;
+            border-right: 4px solid var(--primary);
+        }
+        .panel-right { display: grid; grid-template-rows: 1fr 1fr 1fr; }
+        .panel-box {
+            padding: 16px 12px; text-align: center;
+            font-size: 12px; font-weight: 600; color: var(--primary);
+            border-bottom: 2px solid var(--primary);
+            display: flex; flex-direction: column;
+            align-items: center; justify-content: center;
+            gap: 4px; background: #fff; min-height: 70px;
+        }
+        .panel-box:last-child { border-bottom: none; }
+        .panel-box.fiber { background: #e3f2fd; }
+        .panel-box.water { background: #e8f5e9; }
+        .panel-box.letter { background: #fff8e1; }
+        .panel-box.gas { background: #fce4ec; }
+        .panel-box.delivery { background: #ede7f6; }
+        .panel-box .box-label { font-size: 10px; color: var(--text-light); font-weight: 400; }
+        .panel-box .box-icon { font-size: 22px; }
+
+        /* ── Requirements ── */
+        .req-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+        }
+        .req-item {
+            background: var(--card-bg); border-radius: 12px; padding: 24px;
+            border-left: 4px solid var(--accent);
+            border-top: 1px solid var(--border);
+            border-right: 1px solid var(--border);
+            border-bottom: 1px solid var(--border);
+        }
+        .req-item h4 { font-size: 15px; font-weight: 700; color: var(--primary); margin-bottom: 6px; }
+        .req-item p { font-size: 14px; color: var(--text-light); }
+
+        /* ── Cost Table ── */
+        .cost-section { background: #fff; }
+        .cost-table {
+            width: 100%; border-collapse: collapse;
+            border-radius: 16px; overflow: hidden;
+            border: 1px solid var(--border);
+            margin-top: 20px;
+        }
+        .cost-table thead { background: var(--gradient); color: #fff; }
+        .cost-table th { padding: 16px 20px; text-align: left; font-size: 13px; font-weight: 700; letter-spacing: 0.5px; }
+        .cost-table td { padding: 14px 20px; font-size: 14px; border-bottom: 1px solid #f0f0f0; }
+        .cost-table tbody tr:hover { background: #fafafe; }
+        .cost-table .cat-row {
+            background: var(--light); font-weight: 700;
+            color: var(--primary); font-size: 13px;
+            letter-spacing: 0.5px;
+        }
+        .cost-table .cat-row td { padding: 10px 20px; border-bottom: 2px solid var(--border); }
+        .cost-table .total-row {
+            background: var(--primary); color: #fff;
+            font-weight: 800; font-size: 16px;
+        }
+        .cost-table .total-row td { padding: 18px 20px; border: none; }
+        .cost-table .subtotal-row { background: #f5f5ff; font-weight: 600; }
+        .cost-note {
+            margin-top: 16px; padding: 16px 20px;
+            background: #fff8e1; border-radius: 10px;
+            border: 1px solid #ffe082;
+            font-size: 13px; color: #6d4c00;
+        }
+
+        /* ── Draft Banner ── */
+        .draft-banner {
+            background: repeating-linear-gradient(
+                -45deg,
+                #ff000015, #ff000015 10px,
+                transparent 10px, transparent 20px
+            );
+            border-bottom: 3px solid var(--accent);
+            text-align: center;
+            padding: 12px 20px;
+            position: sticky;
+            top: 0;
+            z-index: 999;
+            backdrop-filter: blur(10px);
+            background-color: rgba(255,255,255,0.92);
+        }
+        .draft-banner span {
+            font-size: 14px; font-weight: 800;
+            color: var(--accent);
+            letter-spacing: 4px;
+            text-transform: uppercase;
+        }
+
+        /* ── Disclaimer Boxes ── */
+        .disclaimer-box {
+            margin-top: 20px; padding: 18px 22px;
+            border-radius: 10px; font-size: 13px;
+            border: 1px solid;
+        }
+        .disclaimer-box.warn {
+            background: #fff3e0; border-color: #ffcc80; color: #e65100;
+        }
+        .disclaimer-box.info {
+            background: #e3f2fd; border-color: #90caf9; color: #0d47a1;
+        }
+        .disclaimer-box strong { display: block; margin-bottom: 4px; font-size: 14px; }
+        .disclaimer-box ul {
+            margin: 8px 0 0 18px; padding: 0;
+        }
+        .disclaimer-box ul li { margin-bottom: 4px; }
+
+        /* ── Video Grid ── */
+        .video-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 20px; margin-top: 20px;
+        }
+        .video-grid iframe {
+            width: 100%; aspect-ratio: 16/9;
+            border-radius: 12px; border: 1px solid var(--border);
+        }
+        .video-grid .short-video iframe {
+            aspect-ratio: 9/16; max-width: 220px;
+        }
+
+        /* ── Footer ── */
+        footer {
+            background: var(--primary);
+            color: rgba(255,255,255,0.7);
+            text-align: center; padding: 40px 30px; font-size: 14px;
+        }
+        footer strong { color: #fff; }
+
+        @media (max-width: 768px) {
+            .panel-diagram { grid-template-columns: 110px 1fr; max-width: 380px; }
+            .scenario-steps { flex-direction: column; }
+            .step-arrow { display: none; }
+        }
+        @media (max-width: 480px) {
+            .card-grid, .req-grid { grid-template-columns: 1fr; }
+            .gallery-grid { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+
+<!-- ════════════════════ HERO ════════════════════ -->
+<header class="hero">
+    <div class="hero-inner">
+        <div class="brand">
+            <div class="brand-name">SKY <span>Smart Home</span> Architect</div>
+        </div>
+        <p style="font-size:12px; letter-spacing:3px; text-transform:uppercase; opacity:0.4; margin-bottom:10px;">Draft Proposal</p>
+        <h1>Smart Gate Entrance &<br><em>Parcel Delivery System</em></h1>
+        <p class="subtitle">A fully integrated smart access, parcel management, and intercom solution for your residence at 15 Jalan Mariam &mdash; built on the UniFi ecosystem.</p>
+        <div class="badge-row">
+            <span class="badge">Smart Parcel Delivery</span>
+            <span class="badge">License Plate Recognition</span>
+            <span class="badge">Doorbell Intercom</span>
+            <span class="badge">UniFi Ecosystem</span>
+        </div>
+    </div>
+</header>
+
+<!-- ════════════════════ SITE PHOTOS ════════════════════ -->
+<section>
+    <div class="container">
+        <div class="section-label default">Site Overview</div>
+        <h2 class="section-title">Current Site Assessment</h2>
+        <p class="section-desc">Photos from the on-site survey at 15 Jalan Mariam, showing the existing gate entrance, front panel compartments, and internal infrastructure.</p>
+        <div class="gallery-grid">
+            <img src="15jmentpic/20260403_160029.jpg" alt="Full front view of property">
+            <img src="15jmentpic/20260403_155306.jpg" alt="Gate entrance and driveway">
+            <img src="15jmentpic/20260403_155255.jpg" alt="Front panel compartments - delivery boxes">
+            <img src="15jmentpic/20260403_155256.jpg" alt="Front panel compartments - alternate view">
+            <img src="15jmentpic/20260403_155300.jpg" alt="Side gate and front wall">
+            <img src="15jmentpic/20260403_155313.jpg" alt="Main sliding gate and side gate">
+        </div>
+        <p class="gallery-caption">Property front featuring multi-compartment panel system, main sliding gate, and side pedestrian gate</p>
+    </div>
+</section>
+
+
+<!-- ╔══════════════════════════════════════════════════════════╗ -->
+<!-- ║          USER EXPERIENCE 1: PARCEL DELIVERY             ║ -->
+<!-- ╚══════════════════════════════════════════════════════════╝ -->
+<section>
+    <div class="container">
+        <div class="ux-header ux1">
+            <div class="ux-number">01</div>
+            <h2>Smart Parcel Delivery System</h2>
+            <p>Secure, contactless parcel receiving &mdash; delivery drivers deposit packages into locked compartments without ever entering your property.</p>
+        </div>
+
+        <!-- Scenario A: Regular Delivery Man -->
+        <div class="scenario">
+            <h3 style="font-size:16px; font-weight:700; color:var(--primary);">&#x1F4E6; Delivery by Regular Delivery Man</h3>
+            <p style="font-size:13px; color:var(--text-light); margin-top:4px; margin-bottom:4px;">Trusted couriers who deliver frequently &mdash; authenticated via PIN code or facial recognition for hands-free access.</p>
+            <div class="scenario-steps">
+                <div class="step">
+                    <div class="step-num ux1">1</div>
+                    <span class="step-arrow">&rarr;</span>
+                    <h4>Driver Arrives</h4>
+                    <p>Regular courier arrives at front panel and approaches the keypad / camera</p>
+                </div>
+                <div class="step">
+                    <div class="step-num ux1">2</div>
+                    <span class="step-arrow">&rarr;</span>
+                    <h4>Enters PIN / Face Unlock</h4>
+                    <p>Types assigned PIN (e.g. <strong>2894</strong>) or is recognized by AI facial recognition</p>
+                </div>
+                <div class="step">
+                    <div class="step-num ux1">3</div>
+                    <span class="step-arrow">&rarr;</span>
+                    <h4>Box Opens</h4>
+                    <p>Only the designated delivery compartment unlocks via relay</p>
+                </div>
+                <div class="step">
+                    <div class="step-num ux1">4</div>
+                    <h4>Parcel Secured</h4>
+                    <p>Driver places parcel, closes door &mdash; auto-locks. You get a notification</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Scenario B: New Delivery Man -->
+        <div class="scenario">
+            <h3 style="font-size:16px; font-weight:700; color:var(--primary);">&#x1F195; Delivery by New Delivery Man</h3>
+            <p style="font-size:13px; color:var(--text-light); margin-top:4px; margin-bottom:4px;">First-time or unfamiliar couriers who don't have a PIN &mdash; assisted by the homeowner via the intercom doorbell.</p>
+            <div class="scenario-steps">
+                <div class="step">
+                    <div class="step-num ux1">1</div>
+                    <span class="step-arrow">&rarr;</span>
+                    <h4>Driver Rings Doorbell</h4>
+                    <p>New courier presses the intercom doorbell at the gate entrance</p>
+                </div>
+                <div class="step">
+                    <div class="step-num ux1">2</div>
+                    <span class="step-arrow">&rarr;</span>
+                    <h4>Family Responds</h4>
+                    <p>Family answers via phone and says <em>&ldquo;Please leave the parcel in the Delivery Box&rdquo;</em></p>
+                </div>
+                <div class="step">
+                    <div class="step-num ux1">3</div>
+                    <span class="step-arrow">&rarr;</span>
+                    <h4>Remote Unlock</h4>
+                    <p>Family taps to unlock the designated delivery box remotely from the app</p>
+                </div>
+                <div class="step">
+                    <div class="step-num ux1">4</div>
+                    <h4>Parcel Secured</h4>
+                    <p>Driver places parcel, closes door &mdash; auto-locks. Notification sent</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Scenario C: Collection / Retrieval -->
+        <div class="scenario">
+            <h3 style="font-size:16px; font-weight:700; color:var(--primary);">&#x1F4E5; Parcel Collection</h3>
+            <p style="font-size:13px; color:var(--text-light); margin-top:4px; margin-bottom:4px;">Homeowner or authorized person retrieves a parcel from the delivery box &mdash; authenticated via PIN, facial recognition, or remote app unlock.</p>
+            <div class="scenario-steps">
+                <div class="step">
+                    <div class="step-num ux1">1</div>
+                    <span class="step-arrow">&rarr;</span>
+                    <h4>Approach Box</h4>
+                    <p>Homeowner walks to the front panel to collect their parcel</p>
+                </div>
+                <div class="step">
+                    <div class="step-num ux1">2</div>
+                    <span class="step-arrow">&rarr;</span>
+                    <h4>Authenticate</h4>
+                    <p>Enters PIN on keypad, uses facial recognition, or unlocks remotely via app</p>
+                </div>
+                <div class="step">
+                    <div class="step-num ux1">3</div>
+                    <span class="step-arrow">&rarr;</span>
+                    <h4>Box Opens</h4>
+                    <p>The designated compartment unlocks &mdash; homeowner retrieves parcel</p>
+                </div>
+                <div class="step">
+                    <div class="step-num ux1">4</div>
+                    <h4>Box Secured</h4>
+                    <p>Close the door &mdash; compartment auto-locks, ready for next delivery</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Panel Layout -->
+        <h3 style="font-size:20px; font-weight:700; color:var(--primary); margin-bottom:8px;">Front Wall Compartment Map</h3>
+        <p class="section-desc" style="margin-bottom:20px;">The front wall panel houses utility meters and dedicated parcel delivery compartments, each individually controlled by the custom delivery controller.</p>
+
+        <div class="panel-diagram">
+            <div class="panel-left">
+                <div class="panel-box gas">
+                    <div class="box-icon">&#x1F4E5;</div>
+                    Collection Box / Gas Meter
+                </div>
+                <div class="panel-box" style="background:#f5f5f5; opacity:0.4; border-bottom:3px solid var(--primary);">
+                    <span style="font-size:11px; color:#999;">&nbsp;</span>
+                </div>
+                <div class="panel-box" style="background:#e8eaf6;">
+                    <div class="box-icon">&#x1F4E6;</div>
+                    Multi-Function Box A
+                </div>
+            </div>
+            <div class="panel-right">
+                <div class="panel-box delivery">
+                    <div class="box-icon">&#x1F4E6;</div>
+                    Delivery Box 1 / Letterbox
+                    <span class="box-label">Relay-Controlled &bull; Mail Slot</span>
+                </div>
+                <div class="panel-box fiber">
+                    <div class="box-icon">&#x1F310;</div>
+                    Fiber / Network
+                    <span class="box-label">CAT6a &amp; Fiber Optic</span>
+                    <span class="box-label">Power &bull; Smart Controller</span>
+                </div>
+                <div class="panel-box water">
+                    <div class="box-icon">&#x1F4A7;</div>
+                    Multi-Function Box B
+                    <span class="box-label">Water Meter &bull; Drainage</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Components -->
+        <div class="card-grid" style="margin-top: 40px;">
+            <div class="card">
+                <div class="card-icon icon-ctrl">&#x26A1;</div>
+                <h3>Custom-Coded Parcel Delivery Controller</h3>
+                <p>A custom-programmed ESP32-based relay controller (Kincony B8 hardware) with bespoke firmware developed by SKY Smart Home Architect specifically for this parcel delivery system.</p>
+                <ul class="ux1-bullets">
+                    <li>8 relay channels &mdash; each compartment independently controlled</li>
+                    <li>12/24VDC output to electric lock solenoids</li>
+                    <li>Custom firmware with PIN-to-relay mapping logic</li>
+                    <li>WiFi, Ethernet &amp; Bluetooth connectivity</li>
+                    <li>MQTT integration with Home Assistant for notifications</li>
+                    <li>Over-the-air firmware updates</li>
+                </ul>
+            </div>
+            <div class="card">
+                <div class="card-icon icon-key">&#x1F510;</div>
+                <h3>Keypad PIN Access</h3>
+                <p>Dedicated PIN codes allow delivery personnel to open specific compartments without entering the property or interacting with anyone.</p>
+                <ul class="ux1-bullets">
+                    <li>Unique PIN per delivery box</li>
+                    <li>Temporary / one-time PINs supported</li>
+                    <li>Audit trail of all access events with timestamps</li>
+                    <li>Remote PIN management via app</li>
+                </ul>
+            </div>
+            <div class="card">
+                <div class="card-icon icon-face">&#x1F9D1;</div>
+                <h3>Facial Recognition (Advanced)</h3>
+                <p>For recurring delivery personnel (e.g. your regular courier), AI facial recognition can unlock the designated compartment hands-free.</p>
+                <ul class="ux1-bullets">
+                    <li>Enroll trusted, recurring delivery drivers</li>
+                    <li>Camera identifies face &rarr; auto-unlocks assigned box</li>
+                    <li>Integrated with UniFi AI camera system</li>
+                    <li>Fallback to keypad PIN if not recognized</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Special Features -->
+        <h3 style="font-size:20px; font-weight:700; color:var(--primary); margin-top:50px; margin-bottom:8px;">Special Features via Custom-Coded Firmware</h3>
+        <p style="color:var(--text-light); font-size:15px; margin-bottom:20px;">Beyond standard PIN access, the custom firmware enables advanced unlock methods tailored to different delivery scenarios.</p>
+
+        <div class="card-grid">
+            <div class="card">
+                <div class="card-icon" style="background:#e3f2fd; color:#1565c0;">&#x23F0;</div>
+                <h3>Time-Based Unlock</h3>
+                <p>Schedule a delivery compartment to automatically unlock during a specific time window &mdash; ideal for deliveries with a known arrival time.</p>
+                <ul class="ux1-bullets">
+                    <li>Set an unlock window (e.g. 2:00 PM &ndash; 3:00 PM)</li>
+                    <li>Box is accessible only during that period</li>
+                    <li>Auto-locks when the time window expires</li>
+                    <li>Perfect for scheduled grocery or meal deliveries</li>
+                </ul>
+            </div>
+            <div class="card">
+                <div class="card-icon" style="background:#e8f5e9; color:#2e7d32;">&#x1F698;</div>
+                <h3>License Plate Unlock</h3>
+                <p>If the delivery vehicle is always the same, the system can recognize its license plate and automatically unlock the assigned box on arrival.</p>
+                <ul class="ux1-bullets">
+                    <li>Register a delivery vehicle's plate number</li>
+                    <li>AI camera detects plate &rarr; triggers relay unlock</li>
+                    <li>No PIN or interaction needed by the driver</li>
+                    <li>Works with UniFi AI CCTV LPR from UX 2</li>
+                </ul>
+            </div>
+            <div class="card">
+                <div class="card-icon" style="background:#fce4ec; color:#c62828;">&#x1F511;</div>
+                <h3>One-Time PIN (OTP)</h3>
+                <p>Generate a single-use PIN code for one-off deliveries. Once used, the code is immediately invalidated &mdash; it cannot be reused.</p>
+                <ul class="ux1-bullets">
+                    <li>Generate OTP via the app and share with courier</li>
+                    <li>PIN works once, then is permanently expired</li>
+                    <li>Ideal for ad-hoc or first-time deliveries</li>
+                    <li>Full audit log of OTP generation &amp; usage</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+<!-- ╔══════════════════════════════════════════════════════════╗ -->
+<!-- ║      USER EXPERIENCE 2: LPR AUTO GATE ENTRY             ║ -->
+<!-- ╚══════════════════════════════════════════════════════════╝ -->
+<section class="alt-bg">
+    <div class="container">
+        <div class="ux-header ux2">
+            <div class="ux-number">02</div>
+            <h2>Easier Entry with License Plate Recognition</h2>
+            <p>Drive up. Gate opens. No remote, no app, no waiting. AI-powered cameras recognize your vehicle and open the gate automatically.</p>
+        </div>
+
+        <!-- Scenario -->
+        <div class="scenario">
+            <h3 style="font-size:16px; font-weight:700; color:var(--primary);">Coming Home After Work</h3>
+            <div class="scenario-steps">
+                <div class="step">
+                    <div class="step-num ux2">1</div>
+                    <span class="step-arrow">&rarr;</span>
+                    <h4>Approach Gate</h4>
+                    <p>You drive towards the main gate as you normally would</p>
+                </div>
+                <div class="step">
+                    <div class="step-num ux2">2</div>
+                    <span class="step-arrow">&rarr;</span>
+                    <h4>LPR Detection</h4>
+                    <p>UniFi AI camera reads your license plate in real-time</p>
+                </div>
+                <div class="step">
+                    <div class="step-num ux2">3</div>
+                    <span class="step-arrow">&rarr;</span>
+                    <h4>Plate Matched</h4>
+                    <p>System verifies plate against the authorized vehicle list</p>
+                </div>
+                <div class="step">
+                    <div class="step-num ux2">4</div>
+                    <h4>Gate Opens</h4>
+                    <p>Main sliding gate opens automatically &mdash; drive straight in</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Components -->
+        <div class="card-grid">
+            <div class="card">
+                <div class="card-icon icon-cam">&#x1F3A5;</div>
+                <h3>UniFi AI CCTV with LPR</h3>
+                <p>AI-powered cameras positioned at the gate entrance perform real-time license plate recognition with high accuracy, day or night.</p>
+                <ul class="ux2-bullets">
+                    <li>Automatic license plate detection (LPR)</li>
+                    <li>Auto-open gate for registered household vehicles</li>
+                    <li>Visitor vehicle logging with plate capture</li>
+                    <li>24/7 recording with smart motion alerts</li>
+                    <li>Night vision &amp; HDR for all lighting conditions</li>
+                    <li>Person &amp; vehicle detection AI</li>
+                </ul>
+            </div>
+            <div class="card">
+                <div class="card-icon" style="background:#e8eaf6; color:#3949ab;">&#x1F6AA;</div>
+                <h3>UniFi G3 Gate Starter Kit (UA-G3-SK-Gate)</h3>
+                <p>Purpose-built gate access controller with integrated reader, designed specifically for automated gate entry within the UniFi Access ecosystem.</p>
+                <ul class="ux2-bullets">
+                    <li>Main sliding gate &mdash; motorized open/close via LPR trigger</li>
+                    <li>Side pedestrian gate &mdash; electric strike lock</li>
+                    <li>Built-in access reader with NFC &amp; mobile credentials</li>
+                    <li>Remote unlock via UniFi Access mobile app</li>
+                    <li>Visitor management with temporary access</li>
+                    <li>Complete access logs with timestamps</li>
+                </ul>
+            </div>
+            <div class="card">
+                <div class="card-icon" style="background:#e0f2f1; color:#00897b;">&#x1F4F1;</div>
+                <h3>Multi-Household Vehicle Management</h3>
+                <p>Register multiple vehicles for different family units within the home. Each unit manages their own authorized plates via the app.</p>
+                <ul class="ux2-bullets">
+                    <li>Register unlimited household vehicles</li>
+                    <li>Guest / visitor temporary plate registration</li>
+                    <li>Scheduled access for regular visitors (e.g. helper, tutor)</li>
+                    <li>Instant notifications when any vehicle enters</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+<!-- ╔══════════════════════════════════════════════════════════╗ -->
+<!-- ║      USER EXPERIENCE 3: DOORBELL INTERCOM               ║ -->
+<!-- ╚══════════════════════════════════════════════════════════╝ -->
+<section>
+    <div class="container">
+        <div class="ux-header ux3">
+            <div class="ux-number">03</div>
+            <h2>Doorbell Intercom for Individual Family Units</h2>
+            <p>Visitors ring the right unit directly &mdash; not the whole household. Two-way video calling, remote unlock, and smart notifications for every family within the home.</p>
+        </div>
+
+        <!-- Scenario -->
+        <div class="scenario">
+            <h3 style="font-size:16px; font-weight:700; color:var(--primary);">A Visitor Arrives for Unit B</h3>
+            <div class="scenario-steps">
+                <div class="step">
+                    <div class="step-num ux3">1</div>
+                    <span class="step-arrow">&rarr;</span>
+                    <h4>Selects Unit</h4>
+                    <p>Visitor presses the button for "Unit B" on the intercom panel</p>
+                </div>
+                <div class="step">
+                    <div class="step-num ux3">2</div>
+                    <span class="step-arrow">&rarr;</span>
+                    <h4>Unit B Notified</h4>
+                    <p>Only Unit B's phones ring &mdash; other units are not disturbed</p>
+                </div>
+                <div class="step">
+                    <div class="step-num ux3">3</div>
+                    <span class="step-arrow">&rarr;</span>
+                    <h4>Video Call</h4>
+                    <p>Unit B sees live video of the visitor on their phone or indoor display</p>
+                </div>
+                <div class="step">
+                    <div class="step-num ux3">4</div>
+                    <h4>Remote Unlock</h4>
+                    <p>Unit B taps to unlock the side gate remotely &mdash; even if away from home</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Components -->
+        <div class="card-grid">
+            <div class="card">
+                <div class="card-icon icon-intercom">&#x1F514;</div>
+                <h3>UniFi Intercom (UA-Intercom)</h3>
+                <p>A smart video doorbell with per-unit call routing. Visitors select which family unit to ring, so only the intended household is notified.</p>
+                <ul class="ux3-bullets">
+                    <li>Multi-unit directory &mdash; visitors pick the right family</li>
+                    <li>Only the selected unit's devices ring</li>
+                    <li>Full HD video with two-way audio</li>
+                    <li>Works from anywhere via UniFi mobile app</li>
+                    <li>Built-in camera with night vision</li>
+                </ul>
+            </div>
+            <div class="card">
+                <div class="card-icon" style="background:#fce4ec; color:#e91e63;">&#x1F4F2;</div>
+                <h3>Remote Access &amp; Unlock</h3>
+                <p>Answer the door from anywhere in the world. See who is there, talk to them, and remotely unlock the gate &mdash; all from your phone.</p>
+                <ul class="ux3-bullets">
+                    <li>Answer doorbell from your phone (even if you're overseas)</li>
+                    <li>One-tap remote unlock of side gate</li>
+                    <li>Leave voice messages when you can't answer</li>
+                    <li>Works on iOS, Android &amp; desktop</li>
+                </ul>
+            </div>
+            <div class="card">
+                <div class="card-icon" style="background:#e8f5e9; color:#2e7d32;">&#x2705;</div>
+                <h3>Additional UniFi Intercom Benefits</h3>
+                <p>Beyond basic doorbell functionality, the UniFi Intercom brings a suite of smart home advantages:</p>
+                <ul class="ux3-bullets">
+                    <li><strong>NFC / Fingerprint unlock</strong> for residents &mdash; no keys needed</li>
+                    <li><strong>Visitor snapshot log</strong> &mdash; photo captured on every ring</li>
+                    <li><strong>Package delivery alerts</strong> &mdash; detect when someone is at the door</li>
+                    <li><strong>Integration with UniFi Protect</strong> &mdash; unified security timeline</li>
+                    <li><strong>Quick-action buttons</strong> &mdash; open gate, turn on porch light</li>
+                    <li><strong>Do Not Disturb</strong> schedules per unit (e.g. bedtime mode)</li>
+                    <li><strong>PoE powered</strong> &mdash; single Ethernet cable, no battery to charge</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Video Demos -->
+        <h3 style="font-size:20px; font-weight:700; color:var(--primary); margin-top:50px; margin-bottom:8px;">See It in Action</h3>
+        <p style="color:var(--text-light); font-size:15px; margin-bottom:10px;">Watch how the UniFi Access and Intercom systems work in real-world installations.</p>
+        <div class="video-grid">
+            <div>
+                <iframe src="https://www.youtube.com/embed/Awr-zfQzojI" title="UniFi Access Demo" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+            </div>
+            <div>
+                <iframe src="https://www.youtube.com/embed/xHy6-UeFnfY" title="UniFi Intercom Demo" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+            </div>
+            <div>
+                <iframe src="https://www.youtube.com/embed/5wJBwqLV6rc" title="UniFi Access Short" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+<!-- ════════════════════ WIRING REQUIREMENTS ════════════════════ -->
+<section class="alt-bg">
+    <div class="container">
+        <div class="section-label default">Requirements</div>
+        <h2 class="section-title">Additional Infrastructure Needed</h2>
+        <p class="section-desc">The following wiring and infrastructure must be installed to support all three systems.</p>
+
+        <div class="req-grid">
+            <div class="req-item">
+                <h4>2&times; CAT6a Ethernet Cables</h4>
+                <p>Shielded Category 6a cables for data communication between UniFi controller, AI cameras, intercom, and the parcel delivery controller. Supports PoE for powering devices.</p>
+            </div>
+            <div class="req-item">
+                <h4>2.5mm&sup2; Power Cable</h4>
+                <p>Dedicated power wiring to supply 12/24VDC from the PSU to the relay controller and each electric lock solenoid in the delivery compartments and gates.</p>
+            </div>
+            <div class="req-item">
+                <h4>Conduit &amp; Protection</h4>
+                <p>Outdoor-rated conduit to protect cable runs from weather exposure along the front wall panel, from the network cabinet to each compartment lock point.</p>
+            </div>
+            <div class="req-item">
+                <h4>12V / 24V DC Power Supply</h4>
+                <p>A DIN-rail mountable DC power supply unit installed in the network compartment to power the delivery controller and all connected electric lock mechanisms.</p>
+            </div>
+        </div>
+
+        <div class="gallery-grid" style="margin-top: 30px;">
+            <img src="15jmentpic/20260403_155830.jpg" alt="Network cabinet with existing cabling">
+            <img src="15jmentpic/20260403_155835.jpg" alt="Fiber and network infrastructure">
+            <img src="15jmentpic/20260403_155912.jpg" alt="Compartment showing available routing paths">
+        </div>
+        <p class="gallery-caption">Existing internal infrastructure: network cabinet (fiber optic termination) and utility compartments showing available routing paths for new cabling</p>
+    </div>
+</section>
+
+
+<!-- ════════════════════ ESTIMATED COST ════════════════════ -->
+<section class="cost-section">
+    <div class="container">
+        <div class="section-label default">Investment</div>
+        <h2 class="section-title">Estimated Cost Breakdown</h2>
+        <p class="section-desc">An indicative cost estimate for equipment and smart system development. <strong>Costs do not include electrical installation</strong> &mdash; electrical and mechanical works will be quoted separately by the appointed electrician / installer.</p>
+
+        <table class="cost-table">
+            <thead>
+                <tr>
+                    <th style="width:45%">Item</th>
+                    <th style="width:10%">Qty</th>
+                    <th style="width:25%">Description</th>
+                    <th style="width:20%; text-align:right;">Est. Cost (SGD)</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- UX1: Parcel Delivery -->
+                <tr class="cat-row">
+                    <td colspan="4">&#x1F4E6; &nbsp; UX 1 &mdash; Smart Parcel Delivery System</td>
+                </tr>
+                <tr>
+                    <td>Custom-Coded Parcel Delivery Controller</td>
+                    <td>1</td>
+                    <td>Custom made hardware + bespoke firmware</td>
+                    <td style="text-align:right;">$1,600</td>
+                </tr>
+                <tr>
+                    <td>Control Box &amp; Enclosure</td>
+                    <td>1</td>
+                    <td>Weatherproof DIN-rail enclosure for controller &amp; PSU</td>
+                    <td style="text-align:right;">$120</td>
+                </tr>
+                <tr>
+                    <td>12VDC Electric Solenoid Locks</td>
+                    <td>3</td>
+                    <td>One per delivery compartment</td>
+                    <td style="text-align:right;">$180</td>
+                </tr>
+                <tr>
+                    <td>Weatherproof Keypad</td>
+                    <td>1</td>
+                    <td>Backlit, outdoor-rated</td>
+                    <td style="text-align:right;">$120</td>
+                </tr>
+                <tr>
+                    <td>12V DC Power Supply (DIN Rail)</td>
+                    <td>1</td>
+                    <td>Mean Well or equivalent</td>
+                    <td style="text-align:right;">$80</td>
+                </tr>
+                <tr>
+                    <td>Accessories, Adapters &amp; Connectors</td>
+                    <td>1 lot</td>
+                    <td>Wiring terminals, relay adapters, fuses, DIN mounts</td>
+                    <td style="text-align:right;">$150</td>
+                </tr>
+                <tr>
+                    <td>Custom Firmware Development</td>
+                    <td>1</td>
+                    <td>PIN logic, MQTT, OTP, time-based unlock, notifications, OTA</td>
+                    <td style="text-align:right;">$1,200</td>
+                </tr>
+                <tr class="subtotal-row">
+                    <td colspan="3" style="text-align:right; padding-right:30px;"><strong>Subtotal &mdash; Parcel Delivery</strong></td>
+                    <td style="text-align:right;"><strong>$3,450</strong></td>
+                </tr>
+
+                <!-- UX2: LPR Gate -->
+                <tr class="cat-row">
+                    <td colspan="4">&#x1F697; &nbsp; UX 2 &mdash; License Plate Recognition Gate Entry</td>
+                </tr>
+                <tr>
+                    <td>UniFi AI Camera (AI Pro / AI Bullet)</td>
+                    <td>1</td>
+                    <td>LPR-capable, PoE powered</td>
+                    <td style="text-align:right;">$550</td>
+                </tr>
+                <tr>
+                    <td>UniFi G3 Gate Starter Kit (UA-G3-SK-Gate)</td>
+                    <td>1</td>
+                    <td>Gate access controller with built-in reader</td>
+                    <td style="text-align:right;">$450</td>
+                </tr>
+                <tr>
+                    <td>Gate Motor Relay Interface</td>
+                    <td>1</td>
+                    <td>Dry-contact trigger to existing gate motor</td>
+                    <td style="text-align:right;">$80</td>
+                </tr>
+                <tr>
+                    <td>Control Box &amp; Mounting Hardware</td>
+                    <td>1</td>
+                    <td>Weatherproof enclosure for gate controller</td>
+                    <td style="text-align:right;">$100</td>
+                </tr>
+                <tr>
+                    <td>Accessories, Adapters &amp; Connectors</td>
+                    <td>1 lot</td>
+                    <td>PoE injector, patch cables, mounting brackets</td>
+                    <td style="text-align:right;">$120</td>
+                </tr>
+                <tr>
+                    <td>UniFi Protect NVR</td>
+                    <td>1</td>
+                    <td>If not already installed (Cloud Key Gen2+ or UNVR)</td>
+                    <td style="text-align:right;">$500</td>
+                </tr>
+                <tr>
+                    <td>Configuration &amp; LPR Setup</td>
+                    <td>1</td>
+                    <td>Camera positioning, plate enrollment, automation rules</td>
+                    <td style="text-align:right;">$400</td>
+                </tr>
+                <tr class="subtotal-row">
+                    <td colspan="3" style="text-align:right; padding-right:30px;"><strong>Subtotal &mdash; LPR Gate Entry</strong></td>
+                    <td style="text-align:right;"><strong>$2,200</strong></td>
+                </tr>
+
+                <!-- UX3: Intercom -->
+                <tr class="cat-row">
+                    <td colspan="4">&#x1F514; &nbsp; UX 3 &mdash; Doorbell Intercom System</td>
+                </tr>
+                <tr>
+                    <td>UniFi Intercom (UA-Intercom)</td>
+                    <td>1</td>
+                    <td>PoE video intercom with multi-unit directory</td>
+                    <td style="text-align:right;">$400</td>
+                </tr>
+                <tr>
+                    <td>Side Gate Electric Strike</td>
+                    <td>1</td>
+                    <td>Remote unlock via intercom</td>
+                    <td style="text-align:right;">$90</td>
+                </tr>
+                <tr>
+                    <td>Accessories, Adapters &amp; Connectors</td>
+                    <td>1 lot</td>
+                    <td>Mounting plate, PoE adapter, patch cables</td>
+                    <td style="text-align:right;">$80</td>
+                </tr>
+                <tr>
+                    <td>Multi-Unit Configuration</td>
+                    <td>1</td>
+                    <td>Directory setup, per-unit call routing, app onboarding</td>
+                    <td style="text-align:right;">$300</td>
+                </tr>
+                <tr class="subtotal-row">
+                    <td colspan="3" style="text-align:right; padding-right:30px;"><strong>Subtotal &mdash; Intercom System</strong></td>
+                    <td style="text-align:right;"><strong>$870</strong></td>
+                </tr>
+
+                <!-- Shared Infrastructure -->
+                <tr class="cat-row">
+                    <td colspan="4">&#x1F50C; &nbsp; Shared Infrastructure &amp; Cabling</td>
+                </tr>
+                <tr>
+                    <td>CAT6a Shielded Ethernet Cable</td>
+                    <td>2 runs</td>
+                    <td>Data + PoE to front panel devices</td>
+                    <td style="text-align:right; color:var(--text-light); font-style:italic;">Subject to electrician quote</td>
+                </tr>
+                <tr>
+                    <td>2.5mm&sup2; Power Cable</td>
+                    <td>1 run</td>
+                    <td>12/24VDC supply to locks &amp; controller</td>
+                    <td style="text-align:right; color:var(--text-light); font-style:italic;">Subject to electrician quote</td>
+                </tr>
+                <tr>
+                    <td>Outdoor Conduit &amp; Fittings</td>
+                    <td>1 lot</td>
+                    <td>Weather protection for all cable runs</td>
+                    <td style="text-align:right; color:var(--text-light); font-style:italic;">Subject to electrician quote</td>
+                </tr>
+                <tr>
+                    <td>Cable Pulling, Termination &amp; Labour</td>
+                    <td>1</td>
+                    <td>Professional electrical installation</td>
+                    <td style="text-align:right; color:var(--text-light); font-style:italic;">Subject to electrician quote</td>
+                </tr>
+                <tr class="subtotal-row">
+                    <td colspan="3" style="text-align:right; padding-right:30px;"><strong>Subtotal &mdash; Infrastructure</strong></td>
+                    <td style="text-align:right; font-style:italic;">TBC</td>
+                </tr>
+
+                <!-- Total -->
+                <tr class="total-row">
+                    <td colspan="3" style="text-align:right; padding-right:30px;">ESTIMATED TOTAL (excl. electrical &amp; cabling)</td>
+                    <td style="text-align:right;">$6,520</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <div class="disclaimer-box warn">
+            <strong>&#x26A0; Costs Exclude Electrical Installation</strong>
+            All electrical wiring, cable pulling, termination, and mechanical fitting works are <strong>not included</strong> in the above estimate. These will be quoted separately by the appointed licensed electrician / installer based on site assessment.
+        </div>
+
+        <div class="disclaimer-box info">
+            <strong>&#x1F4CB; This Proposal is Subject To:</strong>
+            <ul>
+                <li><strong>Electrical Discussion</strong> &mdash; Final wiring plan and routing to be confirmed with the licensed electrician on-site</li>
+                <li><strong>Owner Discussion</strong> &mdash; Final scope, feature selection, and compartment allocation to be confirmed with the homeowner</li>
+                <li><strong>Stock Availability</strong> &mdash; UniFi hardware availability may affect delivery timelines; alternatives will be proposed if needed</li>
+            </ul>
+        </div>
+
+        <div class="cost-note" style="margin-top:16px;">
+            <strong>Note:</strong> All prices are estimates in SGD and exclude GST. Final pricing may vary based on product availability and site conditions.
+        </div>
+    </div>
+</section>
+
+
+<!-- ════════════════════ FOOTER ════════════════════ -->
+<footer>
+    <div class="container">
+        <p><strong>SKY Smart Home Architect</strong></p>
+        <p style="margin-top: 8px;">Proposal for 15 Jalan Mariam &bull; Gate Entrance, Parcel Delivery &amp; Intercom System</p>
+        <p style="margin-top: 10px; font-size: 16px;">&#x1F4AC; <a href="https://wa.me/6592212224" target="_blank" style="color:#fff; text-decoration:none; font-weight:700;">+65 9221 2224</a></p>
+        <p style="margin-top: 8px; font-size: 12px; opacity: 0.5;">Prepared April 2026 &bull; Confidential</p>
+    </div>
+</footer>
+
+</body>
+</html>
