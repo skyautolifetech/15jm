@@ -1,0 +1,1132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Smart Home Architect — Device & Scope Planning</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;600&family=DM+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0a0c0f;
+    --surface: #111318;
+    --surface2: #181c23;
+    --border: #1e2530;
+    --accent: #c8a96e;
+    --accent2: #5e9fd4;
+    --accent3: #7ed4a0;
+    --accent4: #d47e7e;
+    --accent5: #b07ed4;
+    --text: #e8e4dc;
+    --muted: #5a6070;
+    --dimmed: #2e3540;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'DM Mono', monospace;
+    font-size: 13px;
+    line-height: 1.7;
+    min-height: 100vh;
+  }
+
+  /* TOP HEADER */
+  .masthead {
+    border-bottom: 1px solid var(--border);
+    padding: 48px 60px 36px;
+    position: relative;
+    overflow: hidden;
+  }
+  .masthead::before {
+    content: '';
+    position: absolute;
+    top: -80px; right: -80px;
+    width: 360px; height: 360px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(200,169,110,0.07) 0%, transparent 70%);
+  }
+  .masthead-label {
+    font-size: 10px;
+    letter-spacing: 0.3em;
+    color: var(--accent);
+    text-transform: uppercase;
+    margin-bottom: 16px;
+  }
+  .masthead-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 52px;
+    font-weight: 300;
+    line-height: 1.1;
+    letter-spacing: -0.02em;
+    color: var(--text);
+    margin-bottom: 10px;
+  }
+  .masthead-title span { color: var(--accent); }
+  .masthead-sub {
+    color: var(--muted);
+    font-size: 11px;
+    letter-spacing: 0.15em;
+  }
+  .masthead-meta {
+    margin-top: 28px;
+    display: flex;
+    gap: 40px;
+    flex-wrap: wrap;
+  }
+  .meta-item { display: flex; flex-direction: column; gap: 3px; }
+  .meta-label { font-size: 9px; letter-spacing: 0.25em; color: var(--muted); text-transform: uppercase; }
+  .meta-value { font-size: 12px; color: var(--accent); }
+
+  /* LAYOUT */
+  .body-wrap {
+    display: grid;
+    grid-template-columns: 220px 1fr;
+    min-height: calc(100vh - 200px);
+  }
+
+  /* SIDEBAR NAV */
+  .sidebar {
+    border-right: 1px solid var(--border);
+    padding: 36px 0;
+    position: sticky;
+    top: 0;
+    height: fit-content;
+  }
+  .nav-section { margin-bottom: 8px; }
+  .nav-section-label {
+    font-size: 9px;
+    letter-spacing: 0.3em;
+    color: var(--muted);
+    text-transform: uppercase;
+    padding: 12px 24px 6px;
+  }
+  .nav-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 7px 24px;
+    color: var(--muted);
+    cursor: pointer;
+    transition: all 0.15s;
+    font-size: 11px;
+    border-left: 2px solid transparent;
+    text-decoration: none;
+  }
+  .nav-item:hover { color: var(--text); border-left-color: var(--dimmed); }
+  .nav-item.active { color: var(--text); border-left-color: var(--accent); }
+  .nav-dot {
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    background: currentColor;
+    opacity: 0.4;
+    flex-shrink: 0;
+  }
+  .nav-count {
+    margin-left: auto;
+    font-size: 9px;
+    background: var(--dimmed);
+    color: var(--muted);
+    padding: 1px 6px;
+    border-radius: 10px;
+  }
+
+  /* MAIN CONTENT */
+  .main {
+    padding: 48px 60px;
+  }
+
+  /* SECTION */
+  .section {
+    margin-bottom: 64px;
+    scroll-margin-top: 20px;
+  }
+  .section-header {
+    display: flex;
+    align-items: baseline;
+    gap: 16px;
+    margin-bottom: 24px;
+    padding-bottom: 16px;
+    border-bottom: 1px solid var(--border);
+  }
+  .section-number {
+    font-size: 10px;
+    color: var(--muted);
+    letter-spacing: 0.1em;
+    min-width: 24px;
+  }
+  .section-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 26px;
+    font-weight: 400;
+    letter-spacing: 0.01em;
+  }
+  .section-badge {
+    margin-left: auto;
+    font-size: 9px;
+    letter-spacing: 0.2em;
+    padding: 3px 10px;
+    border-radius: 2px;
+    text-transform: uppercase;
+  }
+  .badge-planning { background: rgba(200,169,110,0.1); color: var(--accent); border: 1px solid rgba(200,169,110,0.2); }
+  .badge-electrical { background: rgba(94,159,212,0.1); color: var(--accent2); border: 1px solid rgba(94,159,212,0.2); }
+  .badge-ai { background: rgba(180,126,212,0.1); color: var(--accent5); border: 1px solid rgba(180,126,212,0.2); }
+  .badge-network { background: rgba(94,159,212,0.1); color: var(--accent2); border: 1px solid rgba(94,159,212,0.2); }
+  .badge-safety { background: rgba(212,126,126,0.1); color: var(--accent4); border: 1px solid rgba(212,126,126,0.2); }
+  .badge-office { background: rgba(126,212,160,0.1); color: var(--accent3); border: 1px solid rgba(126,212,160,0.2); }
+  .badge-robotics { background: rgba(180,126,212,0.1); color: var(--accent5); border: 1px solid rgba(180,126,212,0.2); }
+  .badge-electronics { background: rgba(200,169,110,0.1); color: var(--accent); border: 1px solid rgba(200,169,110,0.2); }
+
+  /* CATEGORY GROUP */
+  .cat-group {
+    margin-bottom: 28px;
+  }
+  .cat-label {
+    font-size: 9px;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .cat-label::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--dimmed);
+  }
+
+  /* DEVICE GRID */
+  .device-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: 8px;
+  }
+  .device-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    padding: 12px 14px;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    transition: border-color 0.2s, background 0.2s;
+    position: relative;
+    overflow: hidden;
+  }
+  .device-card::before {
+    content: '';
+    position: absolute;
+    left: 0; top: 0; bottom: 0;
+    width: 2px;
+  }
+  .device-card.c-gold::before { background: var(--accent); }
+  .device-card.c-blue::before { background: var(--accent2); }
+  .device-card.c-green::before { background: var(--accent3); }
+  .device-card.c-red::before { background: var(--accent4); }
+  .device-card.c-purple::before { background: var(--accent5); }
+  .device-card:hover {
+    background: var(--surface2);
+    border-color: var(--muted);
+  }
+  .device-name {
+    font-size: 12px;
+    color: var(--text);
+    font-weight: 500;
+  }
+  .device-detail {
+    font-size: 10px;
+    color: var(--muted);
+    line-height: 1.5;
+  }
+  .device-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px;
+    margin-top: 4px;
+  }
+  .tag {
+    font-size: 9px;
+    padding: 1px 6px;
+    border-radius: 2px;
+    letter-spacing: 0.1em;
+  }
+  .tag-wifi { background: rgba(94,159,212,0.1); color: var(--accent2); }
+  .tag-zigbee { background: rgba(200,169,110,0.1); color: var(--accent); }
+  .tag-zwave { background: rgba(126,212,160,0.1); color: var(--accent3); }
+  .tag-matter { background: rgba(180,126,212,0.12); color: var(--accent5); }
+  .tag-wired { background: rgba(212,126,126,0.1); color: var(--accent4); }
+  .tag-poe { background: rgba(200,169,110,0.08); color: var(--accent); }
+  .tag-ai { background: rgba(180,126,212,0.1); color: var(--accent5); }
+  .tag-local { background: rgba(126,212,160,0.1); color: var(--accent3); }
+  .tag-rs485 { background: rgba(94,159,212,0.08); color: var(--accent2); }
+
+  /* NOTES BLOCK */
+  .notes-block {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-left: 3px solid var(--accent);
+    border-radius: 4px;
+    padding: 14px 18px;
+    margin-top: 12px;
+    font-size: 11px;
+    color: var(--muted);
+    line-height: 1.8;
+  }
+  .notes-block strong { color: var(--accent); font-weight: 500; }
+
+  /* SUMMARY ROW */
+  .summary-strip {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    padding: 20px 28px;
+    display: flex;
+    gap: 40px;
+    flex-wrap: wrap;
+    margin-bottom: 48px;
+    align-items: center;
+  }
+  .sum-item { display: flex; flex-direction: column; gap: 3px; }
+  .sum-label { font-size: 9px; letter-spacing: 0.25em; color: var(--muted); text-transform: uppercase; }
+  .sum-val { font-family: 'Cormorant Garamond', serif; font-size: 28px; color: var(--accent); line-height: 1; }
+  .sum-unit { font-size: 10px; color: var(--muted); }
+  .sum-divider { width: 1px; background: var(--border); align-self: stretch; }
+
+  /* FOOTER */
+  .footer {
+    border-top: 1px solid var(--border);
+    padding: 24px 60px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    color: var(--muted);
+    font-size: 10px;
+    letter-spacing: 0.1em;
+  }
+  .footer span { color: var(--accent); }
+
+  @media (max-width: 768px) {
+    .body-wrap { grid-template-columns: 1fr; }
+    .sidebar { display: none; }
+    .main, .masthead, .footer { padding: 24px 20px; }
+    .masthead-title { font-size: 34px; }
+    .device-grid { grid-template-columns: 1fr; }
+  }
+
+  /* Animations */
+  .section { animation: fadeUp 0.4s ease both; }
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(12px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  .section:nth-child(2) { animation-delay: 0.05s; }
+  .section:nth-child(3) { animation-delay: 0.10s; }
+  .section:nth-child(4) { animation-delay: 0.15s; }
+  .section:nth-child(5) { animation-delay: 0.20s; }
+  .section:nth-child(6) { animation-delay: 0.25s; }
+  .section:nth-child(7) { animation-delay: 0.30s; }
+  .section:nth-child(8) { animation-delay: 0.35s; }
+</style>
+</head>
+<body>
+
+<!-- MASTHEAD -->
+<div class="masthead">
+  <div class="masthead-label">AutoLifeTech · Smart Home Architect · Proposal Scope</div>
+  <div class="masthead-title">Smart <span>Device</span><br>Planning List</div>
+  <div class="masthead-sub">LANDED RESIDENTIAL — FULL BESPOKE INTEGRATION</div>
+  <div class="masthead-meta">
+    <div class="meta-item"><div class="meta-label">Property Type</div><div class="meta-value">Landed House</div></div>
+    <div class="meta-item"><div class="meta-label">Service Tier</div><div class="meta-value">Smart Home Architect</div></div>
+    <div class="meta-item"><div class="meta-label">Scope</div><div class="meta-value">Planning & Consultation</div></div>
+    <div class="meta-item"><div class="meta-label">Control Platform</div><div class="meta-value">AutoLifeTech App · Local First</div></div>
+  </div>
+</div>
+
+<div class="body-wrap">
+
+  <!-- SIDEBAR -->
+  <aside class="sidebar">
+    <div class="nav-section">
+      <div class="nav-section-label">Scope Areas</div>
+      <a class="nav-item active" href="#smart-devices"><div class="nav-dot"></div>Smart Devices<span class="nav-count">40+</span></a>
+      <a class="nav-item" href="#electrical"><div class="nav-dot"></div>Electrical<span class="nav-count">18</span></a>
+      <a class="nav-item" href="#ai"><div class="nav-dot"></div>AI Systems<span class="nav-count">14</span></a>
+      <a class="nav-item" href="#network"><div class="nav-dot"></div>Network & WiFi<span class="nav-count">22</span></a>
+      <a class="nav-item" href="#safety"><div class="nav-dot"></div>Safety & Security<span class="nav-count">28</span></a>
+      <a class="nav-item" href="#office"><div class="nav-dot"></div>Home Office<span class="nav-count">20</span></a>
+      <a class="nav-item" href="#robotics"><div class="nav-dot"></div>Robotics<span class="nav-count">10</span></a>
+      <a class="nav-item" href="#electronics"><div class="nav-dot"></div>Electronics<span class="nav-count">24</span></a>
+    </div>
+    <div class="nav-section">
+      <div class="nav-section-label">Protocol Tags</div>
+      <div class="nav-item"><span class="tag tag-wifi">WiFi</span></div>
+      <div class="nav-item"><span class="tag tag-zigbee">Zigbee</span></div>
+      <div class="nav-item"><span class="tag tag-zwave">Z-Wave</span></div>
+      <div class="nav-item"><span class="tag tag-matter">Matter</span></div>
+      <div class="nav-item"><span class="tag tag-wired">Wired</span></div>
+      <div class="nav-item"><span class="tag tag-poe">PoE</span></div>
+    </div>
+  </aside>
+
+  <!-- MAIN -->
+  <main class="main">
+
+    <!-- SUMMARY -->
+    <div class="summary-strip">
+      <div class="sum-item"><div class="sum-label">Device Categories</div><div class="sum-val">8</div></div>
+      <div class="sum-divider"></div>
+      <div class="sum-item"><div class="sum-label">Total Device Types</div><div class="sum-val">176+</div><div class="sum-unit">items across all scopes</div></div>
+      <div class="sum-divider"></div>
+      <div class="sum-item"><div class="sum-label">Control Platform</div><div class="sum-val" style="font-size:16px;padding-top:6px">AutoLifeTech</div><div class="sum-unit">3D Floorplan · Local Control</div></div>
+      <div class="sum-divider"></div>
+      <div class="sum-item"><div class="sum-label">Privacy</div><div class="sum-val" style="font-size:16px;padding-top:6px">Local First</div><div class="sum-unit">No cloud dependency</div></div>
+    </div>
+
+    <!-- ── SECTION 1: SMART DEVICES ── -->
+    <div class="section" id="smart-devices">
+      <div class="section-header">
+        <div class="section-number">01</div>
+        <div class="section-title">Smart Device Planning</div>
+        <div class="section-badge badge-planning">Core Scope</div>
+      </div>
+
+      <div class="cat-group">
+        <div class="cat-label">Lighting Control</div>
+        <div class="device-grid">
+          <div class="device-card c-gold">
+            <div class="device-name">Smart Switches & Dimmers</div>
+            <div class="device-detail">Per-room control, scene-based dimming, multi-gang panels. Bedroom, living, kitchen, corridors.</div>
+            <div class="device-tags"><span class="tag tag-zigbee">Zigbee</span><span class="tag tag-matter">Matter</span><span class="tag tag-wired">Wired</span></div>
+          </div>
+          <div class="device-card c-gold">
+            <div class="device-name">Smart Bulbs / LED Strips</div>
+            <div class="device-detail">Tunable white + RGBW for ambiance. Cove lighting, under-cabinet, staircase, landscape.</div>
+            <div class="device-tags"><span class="tag tag-zigbee">Zigbee</span><span class="tag tag-wifi">WiFi</span></div>
+          </div>
+          <div class="device-card c-gold">
+            <div class="device-name">Outdoor Landscape Lighting</div>
+            <div class="device-detail">Pathway, uplighting, perimeter. Sunrise/sunset automation, motion-triggered.</div>
+            <div class="device-tags"><span class="tag tag-zigbee">Zigbee</span><span class="tag tag-wired">Wired</span></div>
+          </div>
+          <div class="device-card c-gold">
+            <div class="device-name">Motion-Activated Lights</div>
+            <div class="device-detail">Corridors, bathrooms, store rooms. PIR or mmWave presence sensors driving lighting scenes.</div>
+            <div class="device-tags"><span class="tag tag-zigbee">Zigbee</span></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="cat-group">
+        <div class="cat-label">Climate & Air Quality</div>
+        <div class="device-grid">
+          <div class="device-card c-blue">
+            <div class="device-name">Smart Aircon IR / AC Controllers</div>
+            <div class="device-detail">Per-room AC control via IR blasters or native WiFi. Schedule, presence-based, temperature-based.</div>
+            <div class="device-tags"><span class="tag tag-wifi">WiFi</span><span class="tag tag-zigbee">Zigbee</span></div>
+          </div>
+          <div class="device-card c-blue">
+            <div class="device-name">Smart Ceiling / Stand Fans</div>
+            <div class="device-detail">Speed, oscillation and schedule control. Living room, bedrooms.</div>
+            <div class="device-tags"><span class="tag tag-wifi">WiFi</span><span class="tag tag-matter">Matter</span></div>
+          </div>
+          <div class="device-card c-blue">
+            <div class="device-name">Air Quality Sensors (AQI)</div>
+            <div class="device-detail">PM2.5, CO₂, VOC, humidity, temperature. Triggers ventilation or purifier automation.</div>
+            <div class="device-tags"><span class="tag tag-zigbee">Zigbee</span><span class="tag tag-wifi">WiFi</span></div>
+          </div>
+          <div class="device-card c-blue">
+            <div class="device-name">Smart Air Purifiers</div>
+            <div class="device-detail">Auto-mode triggered by AQI sensor thresholds. Living, master bedroom.</div>
+            <div class="device-tags"><span class="tag tag-wifi">WiFi</span></div>
+          </div>
+          <div class="device-card c-blue">
+            <div class="device-name">Smart Dehumidifier</div>
+            <div class="device-detail">Humidity-threshold based automation. Basement, store, wardrobe.</div>
+            <div class="device-tags"><span class="tag tag-wifi">WiFi</span></div>
+          </div>
+          <div class="device-card c-blue">
+            <div class="device-name">ERV / Ventilation Control</div>
+            <div class="device-detail">Energy Recovery Ventilator scheduling, CO₂-triggered fresh air intake.</div>
+            <div class="device-tags"><span class="tag tag-rs485">RS485</span><span class="tag tag-wired">Wired</span></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="cat-group">
+        <div class="cat-label">Window, Blinds & Curtains</div>
+        <div class="device-grid">
+          <div class="device-card c-gold">
+            <div class="device-name">Motorised Roller Blinds</div>
+            <div class="device-detail">Per-window or grouped control. Sunlight-triggered, timed, scene-based. Blackout or light-filtering.</div>
+            <div class="device-tags"><span class="tag tag-zigbee">Zigbee</span><span class="tag tag-matter">Matter</span></div>
+          </div>
+          <div class="device-card c-gold">
+            <div class="device-name">Motorised Curtain Tracks</div>
+            <div class="device-detail">Living room, master bedroom. Wake-up automation, movie mode, privacy mode.</div>
+            <div class="device-tags"><span class="tag tag-zigbee">Zigbee</span></div>
+          </div>
+          <div class="device-card c-gold">
+            <div class="device-name">Smart Skylight / Louvre Control</div>
+            <div class="device-detail">Rain sensor–triggered auto-close. Airflow and ventilation management.</div>
+            <div class="device-tags"><span class="tag tag-zigbee">Zigbee</span><span class="tag tag-wired">Wired</span></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="cat-group">
+        <div class="cat-label">Water & Irrigation</div>
+        <div class="device-grid">
+          <div class="device-card c-green">
+            <div class="device-name">Smart Garden Irrigation Controller</div>
+            <div class="device-detail">Multi-zone watering schedules, rain-skip via weather API, soil moisture sensor integration. Front/back garden.</div>
+            <div class="device-tags"><span class="tag tag-wifi">WiFi</span><span class="tag tag-local">Local</span></div>
+          </div>
+          <div class="device-card c-green">
+            <div class="device-name">Soil Moisture Sensors</div>
+            <div class="device-detail">Per-zone moisture monitoring to trigger or skip irrigation cycles. Garden beds, planters.</div>
+            <div class="device-tags"><span class="tag tag-zigbee">Zigbee</span><span class="tag tag-wifi">WiFi</span></div>
+          </div>
+          <div class="device-card c-green">
+            <div class="device-name">Smart Water Valves (Main & Zones)</div>
+            <div class="device-detail">Auto-shutoff on leak detection, zone isolation, holiday mode. Mains inlet, garden zones.</div>
+            <div class="device-tags"><span class="tag tag-zigbee">Zigbee</span><span class="tag tag-wired">Wired</span></div>
+          </div>
+          <div class="device-card c-green">
+            <div class="device-name">Water Leak Sensors</div>
+            <div class="device-detail">Under sink, washing machine, water heater, bathrooms. Triggers valve shutoff + alert.</div>
+            <div class="device-tags"><span class="tag tag-zigbee">Zigbee</span><span class="tag tag-zwave">Z-Wave</span></div>
+          </div>
+          <div class="device-card c-green">
+            <div class="device-name">Smart Water Meter / Flow Monitor</div>
+            <div class="device-detail">Real-time usage tracking, burst/leak detection via flow anomaly, monthly reports.</div>
+            <div class="device-tags"><span class="tag tag-wifi">WiFi</span><span class="tag tag-wired">Wired</span></div>
+          </div>
+          <div class="device-card c-green">
+            <div class="device-name">Rain Sensor (Outdoor)</div>
+            <div class="device-detail">Feeds weather data to irrigation controller. Overrides scheduled watering during rain.</div>
+            <div class="device-tags"><span class="tag tag-zigbee">Zigbee</span></div>
+          </div>
+          <div class="device-card c-green">
+            <div class="device-name">Smart Water Heater Control</div>
+            <div class="device-detail">Schedule-based heating, occupancy-triggered, holiday mode, temperature monitoring.</div>
+            <div class="device-tags"><span class="tag tag-wifi">WiFi</span><span class="tag tag-rs485">RS485</span></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="cat-group">
+        <div class="cat-label">Access & Entry</div>
+        <div class="device-grid">
+          <div class="device-card c-gold">
+            <div class="device-name">Smart Gate / Garage Control</div>
+            <div class="device-detail">Remote open/close, vehicle detection, auto-open on approach, visitor alerts.</div>
+            <div class="device-tags"><span class="tag tag-wifi">WiFi</span><span class="tag tag-wired">Wired</span></div>
+          </div>
+          <div class="device-card c-gold">
+            <div class="device-name">Video Doorbell</div>
+            <div class="device-detail">2-way audio, facial recognition, package detection, integrated with intercom and TV display.</div>
+            <div class="device-tags"><span class="tag tag-poe">PoE</span><span class="tag tag-wifi">WiFi</span></div>
+          </div>
+          <div class="device-card c-gold">
+            <div class="device-name">Smart Door Lock (Main, Side, Back)</div>
+            <div class="device-detail">PIN, fingerprint, RFID, app unlock. Auto-lock timer, entry logging, guest codes.</div>
+            <div class="device-tags"><span class="tag tag-zigbee">Zigbee</span><span class="tag tag-wifi">WiFi</span></div>
+          </div>
+          <div class="device-card c-gold">
+            <div class="device-name">Door / Window Sensors</div>
+            <div class="device-detail">All entry points. Triggers alerts, disarms alarm, drives lighting and AC scenes.</div>
+            <div class="device-tags"><span class="tag tag-zigbee">Zigbee</span><span class="tag tag-zwave">Z-Wave</span></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="cat-group">
+        <div class="cat-label">Smart Appliances</div>
+        <div class="device-grid">
+          <div class="device-card c-blue">
+            <div class="device-name">Smart Washing Machine</div>
+            <div class="device-detail">Cycle completion alerts, off-peak scheduling, power monitoring.</div>
+            <div class="device-tags"><span class="tag tag-wifi">WiFi</span></div>
+          </div>
+          <div class="device-card c-blue">
+            <div class="device-name">Smart Dryer</div>
+            <div class="device-detail">Cycle alerts, energy tracking, schedule coordination with washer.</div>
+            <div class="device-tags"><span class="tag tag-wifi">WiFi</span></div>
+          </div>
+          <div class="device-card c-blue">
+            <div class="device-name">Smart Refrigerator</div>
+            <div class="device-detail">Door open alerts, temperature monitoring, energy tracking.</div>
+            <div class="device-tags"><span class="tag tag-wifi">WiFi</span></div>
+          </div>
+          <div class="device-card c-blue">
+            <div class="device-name">Smart Oven / Microwave</div>
+            <div class="device-detail">Remote preheat, timer alerts, recipe-based programs.</div>
+            <div class="device-tags"><span class="tag tag-wifi">WiFi</span></div>
+          </div>
+          <div class="device-card c-blue">
+            <div class="device-name">Smart Coffee Machine</div>
+            <div class="device-detail">Wake-up routine brew, mobile scheduling, descale alerts.</div>
+            <div class="device-tags"><span class="tag tag-wifi">WiFi</span></div>
+          </div>
+          <div class="device-card c-blue">
+            <div class="device-name">Smart Smart Plugs / Power Strips</div>
+            <div class="device-detail">Per-outlet energy monitoring, remote switching, standby power elimination.</div>
+            <div class="device-tags"><span class="tag tag-zigbee">Zigbee</span><span class="tag tag-matter">Matter</span></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="notes-block">
+        <strong>Planning Note:</strong> All devices to be mapped on 3D interactive floorplan within AutoLifeTech app. Connectivity protocol selection (Zigbee / Matter / WiFi) to be finalised during site survey. Preference for Zigbee/Z-Wave for battery devices, wired/PoE for cameras and access points.
+      </div>
+    </div>
+
+    <!-- ── SECTION 2: ELECTRICAL ── -->
+    <div class="section" id="electrical">
+      <div class="section-header">
+        <div class="section-number">02</div>
+        <div class="section-title">Electrical Planning</div>
+        <div class="section-badge badge-electrical">Infrastructure</div>
+      </div>
+      <div class="device-grid">
+        <div class="device-card c-blue">
+          <div class="device-name">Smart Distribution Board (DB)</div>
+          <div class="device-detail">Per-circuit breaker monitoring, remote trip capability, energy dashboards per zone.</div>
+          <div class="device-tags"><span class="tag tag-wired">Wired</span><span class="tag tag-rs485">RS485</span></div>
+        </div>
+        <div class="device-card c-blue">
+          <div class="device-name">Whole-Home Energy Monitor</div>
+          <div class="device-detail">CT clamp–based real-time energy tracking. Identifies phantom loads and high-consumption patterns.</div>
+          <div class="device-tags"><span class="tag tag-wired">Wired</span><span class="tag tag-wifi">WiFi</span></div>
+        </div>
+        <div class="device-card c-blue">
+          <div class="device-name">EV Charger (Smart)</div>
+          <div class="device-detail">Type 2 / CCS, scheduled off-peak charging, solar surplus diversion, load balancing.</div>
+          <div class="device-tags"><span class="tag tag-wifi">WiFi</span><span class="tag tag-wired">Wired</span></div>
+        </div>
+        <div class="device-card c-blue">
+          <div class="device-name">Solar Inverter Integration</div>
+          <div class="device-detail">Read solar generation data, feed to automation. Trigger high-load appliances during solar surplus.</div>
+          <div class="device-tags"><span class="tag tag-rs485">RS485</span><span class="tag tag-wifi">WiFi</span></div>
+        </div>
+        <div class="device-card c-blue">
+          <div class="device-name">Battery Storage System (ESS)</div>
+          <div class="device-detail">Home energy storage, backup power, peak-shaving integration with smart DB.</div>
+          <div class="device-tags"><span class="tag tag-wired">Wired</span></div>
+        </div>
+        <div class="device-card c-blue">
+          <div class="device-name">Smart Circuit Breakers</div>
+          <div class="device-detail">Per-circuit remote control and monitoring. Arc-fault detection. Integration with automation rules.</div>
+          <div class="device-tags"><span class="tag tag-wired">Wired</span></div>
+        </div>
+        <div class="device-card c-blue">
+          <div class="device-name">UPS (Uninterruptible Power Supply)</div>
+          <div class="device-detail">For smart home hub, NAS, network gear — ensures continuity during power events.</div>
+          <div class="device-tags"><span class="tag tag-wired">Wired</span></div>
+        </div>
+        <div class="device-card c-blue">
+          <div class="device-name">Smart Power Outlets (In-Wall)</div>
+          <div class="device-detail">USB-A + USB-C integrated outlets throughout. Per-outlet control and scheduling.</div>
+          <div class="device-tags"><span class="tag tag-zigbee">Zigbee</span><span class="tag tag-wired">Wired</span></div>
+        </div>
+        <div class="device-card c-blue">
+          <div class="device-name">Conduit & Cable Pathway Planning</div>
+          <div class="device-detail">Cat6A, fibre, speaker, HDMI, coax, PoE, data conduit runs planned before construction.</div>
+          <div class="device-tags"><span class="tag tag-wired">Wired</span></div>
+        </div>
+        <div class="device-card c-blue">
+          <div class="device-name">Whole-Home Surge Protection</div>
+          <div class="device-detail">Type 1 + Type 2 SPD at DB level. Protects all connected smart devices.</div>
+          <div class="device-tags"><span class="tag tag-wired">Wired</span></div>
+        </div>
+        <div class="device-card c-blue">
+          <div class="device-name">Outdoor Power Points (Weatherproof)</div>
+          <div class="device-detail">Garden, patio, car porch, driveway. Smart-switched for irrigation, festive lights, EV.</div>
+          <div class="device-tags"><span class="tag tag-zigbee">Zigbee</span></div>
+        </div>
+        <div class="device-card c-blue">
+          <div class="device-name">Lighting Control Panel / Relay Board</div>
+          <div class="device-detail">Central Zigbee/wired relay banks for retrofitting lights without smart switch at wall.</div>
+          <div class="device-tags"><span class="tag tag-zigbee">Zigbee</span><span class="tag tag-wired">Wired</span></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── SECTION 3: AI ── -->
+    <div class="section" id="ai">
+      <div class="section-header">
+        <div class="section-number">03</div>
+        <div class="section-title">AI Systems & Intelligence</div>
+        <div class="section-badge badge-ai">AI Layer</div>
+      </div>
+      <div class="device-grid">
+        <div class="device-card c-purple">
+          <div class="device-name">AI-Powered Automation Engine</div>
+          <div class="device-detail">On-premise LLM or edge AI to create, suggest and refine automations from usage patterns.</div>
+          <div class="device-tags"><span class="tag tag-local">Local</span><span class="tag tag-ai">AI</span></div>
+        </div>
+        <div class="device-card c-purple">
+          <div class="device-name">AI Voice Assistant (Local)</div>
+          <div class="device-detail">On-device voice processing (Whisper/Rhasspy), no cloud dependency. Whole-home intercom integration.</div>
+          <div class="device-tags"><span class="tag tag-local">Local</span><span class="tag tag-ai">AI</span></div>
+        </div>
+        <div class="device-card c-purple">
+          <div class="device-name">Presence & Occupancy AI</div>
+          <div class="device-detail">mmWave radar + AI to detect occupancy per-room, driving lighting, AC and security modes.</div>
+          <div class="device-tags"><span class="tag tag-ai">AI</span><span class="tag tag-local">Local</span></div>
+        </div>
+        <div class="device-card c-purple">
+          <div class="device-name">AI CCTV / Video Analytics</div>
+          <div class="device-detail">Local facial recognition, package detection, intruder alerts, loitering detection. No cloud upload.</div>
+          <div class="device-tags"><span class="tag tag-ai">AI</span><span class="tag tag-local">Local</span><span class="tag tag-poe">PoE</span></div>
+        </div>
+        <div class="device-card c-purple">
+          <div class="device-name">Energy AI Optimiser</div>
+          <div class="device-detail">Learns usage patterns, forecasts demand, auto-schedules high-load appliances during low tariff / solar surplus.</div>
+          <div class="device-tags"><span class="tag tag-ai">AI</span><span class="tag tag-local">Local</span></div>
+        </div>
+        <div class="device-card c-purple">
+          <div class="device-name">Predictive Maintenance AI</div>
+          <div class="device-detail">Monitors power signatures of HVAC, appliances. Alerts on anomalous patterns indicating wear.</div>
+          <div class="device-tags"><span class="tag tag-ai">AI</span></div>
+        </div>
+        <div class="device-card c-purple">
+          <div class="device-name">AI Scene Suggestions</div>
+          <div class="device-detail">Proactively suggests new automation scenes based on observed daily routines and time-of-day patterns.</div>
+          <div class="device-tags"><span class="tag tag-ai">AI</span><span class="tag tag-local">Local</span></div>
+        </div>
+        <div class="device-card c-purple">
+          <div class="device-name">Smart Intercom AI</div>
+          <div class="device-detail">Recognises known visitors, auto-unlocks for family, sends alerts for unknown faces at gate/door.</div>
+          <div class="device-tags"><span class="tag tag-ai">AI</span><span class="tag tag-local">Local</span></div>
+        </div>
+        <div class="device-card c-purple">
+          <div class="device-name">AI Sleep & Wellness Mode</div>
+          <div class="device-detail">Learns sleep patterns, gradually adjusts lighting warmth and AC temperature through the night.</div>
+          <div class="device-tags"><span class="tag tag-ai">AI</span></div>
+        </div>
+        <div class="device-card c-purple">
+          <div class="device-name">Natural Language Control Interface</div>
+          <div class="device-detail">"Set movie mode" or "prepare guest room" — LLM interprets and executes multi-device scenes.</div>
+          <div class="device-tags"><span class="tag tag-ai">AI</span><span class="tag tag-local">Local</span></div>
+        </div>
+      </div>
+      <div class="notes-block">
+        <strong>AI Architecture Note:</strong> All AI inference to run on local edge server (NUC / mini-PC with GPU) — no data leaves the home. AutoLifeTech local-first philosophy. Cloud AI (GPT/Claude) optionally used for non-sensitive tasks only.
+      </div>
+    </div>
+
+    <!-- ── SECTION 4: NETWORK & WIFI ── -->
+    <div class="section" id="network">
+      <div class="section-header">
+        <div class="section-number">04</div>
+        <div class="section-title">Network & WiFi Infrastructure</div>
+        <div class="section-badge badge-network">Infrastructure</div>
+      </div>
+      <div class="device-grid">
+        <div class="device-card c-blue">
+          <div class="device-name">Fibre ONT / ISP Termination</div>
+          <div class="device-detail">Gigabit fibre termination point. Location planning — server room / network cabinet.</div>
+          <div class="device-tags"><span class="tag tag-wired">Wired</span></div>
+        </div>
+        <div class="device-card c-blue">
+          <div class="device-name">Enterprise Router (pfSense / Unifi)</div>
+          <div class="device-detail">Multi-WAN failover, VLAN segmentation, firewall, VPN server, bandwidth QoS rules.</div>
+          <div class="device-tags"><span class="tag tag-wired">Wired</span></div>
+        </div>
+        <div class="device-card c-blue">
+          <div class="device-name">Core Managed Switch (24/48 port)</div>
+          <div class="device-detail">VLAN trunking, PoE+ for APs and cameras, link aggregation. Central network cabinet.</div>
+          <div class="device-tags"><span class="tag tag-poe">PoE</span><span class="tag tag-wired">Wired</span></div>
+        </div>
+        <div class="device-card c-blue">
+          <div class="device-name">Floor / Zone PoE Switches</div>
+          <div class="device-detail">Per-floor 8-port PoE managed switches for local AP, cameras, intercoms.</div>
+          <div class="device-tags"><span class="tag tag-poe">PoE</span><span class="tag tag-wired">Wired</span></div>
+        </div>
+        <div class="device-card c-blue">
+          <div class="device-name">WiFi 6E / WiFi 7 Access Points</div>
+          <div class="device-detail">Ceiling-mounted APs per floor, garden, car porch. Seamless roaming, dedicated IoT SSID.</div>
+          <div class="device-tags"><span class="tag tag-poe">PoE</span><span class="tag tag-wifi">WiFi</span></div>
+        </div>
+        <div class="device-card c-blue">
+          <div class="device-name">Zigbee Coordinator / Hub</div>
+          <div class="device-detail">USB Zigbee coordinator (Sonoff Zigbee 3.0 / ConBee III) connected to Home Assistant / AutoLifeTech hub.</div>
+          <div class="device-tags"><span class="tag tag-zigbee">Zigbee</span><span class="tag tag-local">Local</span></div>
+        </div>
+        <div class="device-card c-blue">
+          <div class="device-name">Z-Wave USB Controller</div>
+          <div class="device-detail">For Z-Wave devices (door locks, leak sensors). Zooz ZST39 or Aeotec Z-Stick 7.</div>
+          <div class="device-tags"><span class="tag tag-zwave">Z-Wave</span></div>
+        </div>
+        <div class="device-card c-blue">
+          <div class="device-name">Smart Home Hub / Server</div>
+          <div class="device-detail">Mini-PC or NUC running AutoLifeTech / Home Assistant. Local processing, no cloud dependency, RAID storage.</div>
+          <div class="device-tags"><span class="tag tag-local">Local</span><span class="tag tag-wired">Wired</span></div>
+        </div>
+        <div class="device-card c-blue">
+          <div class="device-name">NAS (Network Attached Storage)</div>
+          <div class="device-detail">CCTV footage archival, automation backups, media server, local AI model storage.</div>
+          <div class="device-tags"><span class="tag tag-wired">Wired</span><span class="tag tag-local">Local</span></div>
+        </div>
+        <div class="device-card c-blue">
+          <div class="device-name">VLAN Segmentation Plan</div>
+          <div class="device-detail">Separate VLANs: IoT / Cameras / Work / Family / Guest / DMZ. Firewall rules between segments.</div>
+          <div class="device-tags"><span class="tag tag-wired">Wired</span></div>
+        </div>
+        <div class="device-card c-blue">
+          <div class="device-name">VPN Server (WireGuard)</div>
+          <div class="device-detail">Secure remote access to smart home, CCTV and NAS. No port forwarding of internal services.</div>
+          <div class="device-tags"><span class="tag tag-local">Local</span></div>
+        </div>
+        <div class="device-card c-blue">
+          <div class="device-name">4G/5G LTE Failover</div>
+          <div class="device-detail">Automatic ISP failover to cellular. Keeps smart home and cameras online during fibre outages.</div>
+          <div class="device-tags"><span class="tag tag-wifi">WiFi</span></div>
+        </div>
+        <div class="device-card c-blue">
+          <div class="device-name">Cat6A Structured Cabling</div>
+          <div class="device-detail">Every room with 2× Cat6A data points. Home runs to network cabinet, labelled, documented.</div>
+          <div class="device-tags"><span class="tag tag-wired">Wired</span></div>
+        </div>
+        <div class="device-card c-blue">
+          <div class="device-name">Network Cabinet / Rack</div>
+          <div class="device-detail">Wall-mount or floor-standing 12U–24U cabinet, with patch panel, cable management, ventilation.</div>
+          <div class="device-tags"><span class="tag tag-wired">Wired</span></div>
+        </div>
+        <div class="device-card c-blue">
+          <div class="device-name">DNS Sinkhole (Pi-hole / AdGuard)</div>
+          <div class="device-detail">Network-level ad blocking, telemetry blocking for IoT devices, local DNS resolution.</div>
+          <div class="device-tags"><span class="tag tag-local">Local</span></div>
+        </div>
+        <div class="device-card c-blue">
+          <div class="device-name">Outdoor WiFi AP (Weatherproof)</div>
+          <div class="device-detail">Garden, pool area, car porch coverage. PoE powered, IP66 rated.</div>
+          <div class="device-tags"><span class="tag tag-poe">PoE</span><span class="tag tag-wifi">WiFi</span></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── SECTION 5: SAFETY & SECURITY ── -->
+    <div class="section" id="safety">
+      <div class="section-header">
+        <div class="section-number">05</div>
+        <div class="section-title">Safety & Security</div>
+        <div class="section-badge badge-safety">Critical</div>
+      </div>
+      <div class="cat-group">
+        <div class="cat-label">Surveillance</div>
+        <div class="device-grid">
+          <div class="device-card c-red">
+            <div class="device-name">IP CCTV Cameras (Indoor)</div>
+            <div class="device-detail">Living areas, common corridors, internal garage. Pan-tilt or fixed. AI analytics local processing.</div>
+            <div class="device-tags"><span class="tag tag-poe">PoE</span><span class="tag tag-ai">AI</span></div>
+          </div>
+          <div class="device-card c-red">
+            <div class="device-name">IP CCTV Cameras (Outdoor)</div>
+            <div class="device-detail">Perimeter, driveway, gate, garden, side passages. IR night vision, IP66, wide-angle.</div>
+            <div class="device-tags"><span class="tag tag-poe">PoE</span><span class="tag tag-ai">AI</span></div>
+          </div>
+          <div class="device-card c-red">
+            <div class="device-name">NVR / Local Video Recording</div>
+            <div class="device-detail">Network Video Recorder with local NAS storage. Continuous + motion-triggered recording. No cloud.</div>
+            <div class="device-tags"><span class="tag tag-local">Local</span><span class="tag tag-wired">Wired</span></div>
+          </div>
+          <div class="device-card c-red">
+            <div class="device-name">PTZ Camera (Outdoor)</div>
+            <div class="device-detail">Motorised pan-tilt-zoom for driveway / gate area. Auto-track on motion detection.</div>
+            <div class="device-tags"><span class="tag tag-poe">PoE</span><span class="tag tag-ai">AI</span></div>
+          </div>
+        </div>
+      </div>
+      <div class="cat-group">
+        <div class="cat-label">Intrusion Detection</div>
+        <div class="device-grid">
+          <div class="device-card c-red">
+            <div class="device-name">Smart Alarm Panel</div>
+            <div class="device-detail">Central alarm controller. Integrates all sensors, zones, sirens. App arming/disarming, geofence auto-arm.</div>
+            <div class="device-tags"><span class="tag tag-wired">Wired</span><span class="tag tag-zigbee">Zigbee</span></div>
+          </div>
+          <div class="device-card c-red">
+            <div class="device-name">PIR Motion Sensors</div>
+            <div class="device-detail">All ground floor, perimeter rooms, corridors. Both alarm input and lighting automation.</div>
+            <div class="device-tags"><span class="tag tag-zigbee">Zigbee</span><span class="tag tag-zwave">Z-Wave</span></div>
+          </div>
+          <div class="device-card c-red">
+            <div class="device-name">Glass Break Sensors</div>
+            <div class="device-detail">Living room, ground floor windows. Acoustic glass break detection.</div>
+            <div class="device-tags"><span class="tag tag-zigbee">Zigbee</span><span class="tag tag-zwave">Z-Wave</span></div>
+          </div>
+          <div class="device-card c-red">
+            <div class="device-name">Outdoor Siren (Wired + Wireless)</div>
+            <div class="device-detail">High-decibel alarm, strobe, tamper protection. Visible deterrent at roof level.</div>
+            <div class="device-tags"><span class="tag tag-wired">Wired</span><span class="tag tag-zigbee">Zigbee</span></div>
+          </div>
+          <div class="device-card c-red">
+            <div class="device-name">Perimeter Beam Sensors</div>
+            <div class="device-detail">Invisible IR beam across driveway or garden boundary. Triggers alert before entry point.</div>
+            <div class="device-tags"><span class="tag tag-wired">Wired</span></div>
+          </div>
+        </div>
+      </div>
+      <div class="cat-group">
+        <div class="cat-label">Life Safety</div>
+        <div class="device-grid">
+          <div class="device-card c-red">
+            <div class="device-name">Smoke Detectors (Interconnected)</div>
+            <div class="device-detail">All floors, kitchen, store. Smart interconnection — one triggers all. Push notification + voice alert.</div>
+            <div class="device-tags"><span class="tag tag-zigbee">Zigbee</span><span class="tag tag-matter">Matter</span></div>
+          </div>
+          <div class="device-card c-red">
+            <div class="device-name">CO (Carbon Monoxide) Detectors</div>
+            <div class="device-detail">Garage, kitchen, utility areas. Triggers ventilation, sends alert, can cut gas valve.</div>
+            <div class="device-tags"><span class="tag tag-zigbee">Zigbee</span><span class="tag tag-zwave">Z-Wave</span></div>
+          </div>
+          <div class="device-card c-red">
+            <div class="device-name">Smart Gas Valve Shutoff</div>
+            <div class="device-detail">Motorised gas main shutoff. Triggered by CO sensor or gas leak detector. App control.</div>
+            <div class="device-tags"><span class="tag tag-zigbee">Zigbee</span></div>
+          </div>
+          <div class="device-card c-red">
+            <div class="device-name">Gas Leak Sensor</div>
+            <div class="device-detail">Kitchen / utility. LPG or natural gas detection, triggers shutoff valve and alert.</div>
+            <div class="device-tags"><span class="tag tag-zigbee">Zigbee</span></div>
+          </div>
+          <div class="device-card c-red">
+            <div class="device-name">Emergency Panic Button</div>
+            <div class="device-detail">Discreet wall-mounted or wearable button. Triggers alert to family and security monitoring.</div>
+            <div class="device-tags"><span class="tag tag-zigbee">Zigbee</span><span class="tag tag-zwave">Z-Wave</span></div>
+          </div>
+          <div class="device-card c-red">
+            <div class="device-name">Smart Flood / Water Leak Barrier</div>
+            <div class="device-detail">Automatic door barrier for flood-prone areas. Triggered by floor water sensors.</div>
+            <div class="device-tags"><span class="tag tag-wired">Wired</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── SECTION 6: HOME OFFICE ── -->
+    <div class="section" id="office">
+      <div class="section-header">
+        <div class="section-number">06</div>
+        <div class="section-title">Home Business Office</div>
+        <div class="section-badge badge-office">Workspace</div>
+      </div>
+      <div class="device-grid">
+        <div class="device-card c-green">
+          <div class="device-name">Dedicated Office VLAN / Network</div>
+          <div class="device-detail">Isolated business network segment, separate from family IoT. QoS prioritised for video calls.</div>
+          <div class="device-tags"><span class="tag tag-wired">Wired</span></div>
+        </div>
+        <div class="device-card c-green">
+          <div class="device-name">Multi-Monitor Desk Setup</div>
+          <div class="device-detail">Smart desk with power and height automation. Display switching, KVM, USB-C hub integration.</div>
+          <div class="device-tags"><span class="tag tag-wifi">WiFi</span><span class="tag tag-wired">Wired</span></div>
+        </div>
+        <div class="device-card c-green">
+          <div class="device-name">Smart Standing Desk</div>
+          <div class="device-detail">Height presets, sit-stand reminders, app control and posture tracking integration.</div>
+          <div class="device-tags"><span class="tag tag-wifi">WiFi</span></div>
+        </div>
+        <div class="device-card c-green">
+          <div class="device-name">Motorised Privacy Blinds</div>
+          <div class="device-detail">Auto-close during video calls. App, schedule, or presence-triggered.</div>
+          <div class="device-tags"><span class="tag tag-zigbee">Zigbee</span></div>
+        </div>
+        <div class="device-card c-green">
+          <div class="device-name">Smart Lighting (Bias + Task)</div>
+          <div class="device-detail">Bias lighting, adjustable CCT desk light. "Meeting mode" scene: warm at 4000K, no flicker.</div>
+          <div class="device-tags"><span class="tag tag-zigbee">Zigbee</span></div>
+        </div>
+        <div class="device-card c-green">
+          <div class="device-name">Video Conferencing System</div>
+          <div class="device-detail">4K PTZ camera, beamforming mic array, acoustic treatment, one-touch conference start.</div>
+          <div class="device-tags"><span class="tag tag-poe">PoE</span><span class="tag tag-usb">Wired</span></div>
+        </div>
+        <div class="device-card c-green">
+          <div class="device-name">NAS / Local File Server</div>
+          <div class="device-detail">Business document storage, local backup, remote access via VPN. RAID 1/5.</div>
+          <div class="device-tags"><span class="tag tag-wired">Wired</span><span class="tag tag-local">Local</span></div>
+        </div>
+        <div class="device-card c-green">
+          <div class="device-name">Smart A/C (Office Zone)</div>
+          <div class="device-detail">Dedicated AC unit or split. "Work mode" automation — cools 30 mins before work start.</div>
+          <div class="device-tags"><span class="tag tag-wifi">WiFi</span></div>
+        </div>
+        <div class="device-card c-green">
+          <div class="device-name">Do Not Disturb Integration</div>
+          <div class="device-detail">Office door LED indicator — green/red shows availability. Locks out doorbells/intercoms during focus.</div>
+          <div class="device-tags"><span class="tag tag-zigbee">Zigbee</span></div>
+        </div>
+        <div class="device-card c-green">
+          <div class="device-name">Smart Air Quality (Office)</div>
+          <div class="device-detail">Dedicated CO₂ + VOC monitor. Triggers fresh air ventilation to maintain cognitive performance.</div>
+          <div class="device-tags"><span class="tag tag-zigbee">Zigbee</span></div>
+        </div>
+        <div class="device-card c-green">
+          <div class="device-name">Access Control (Office Door)</div>
+          <div class="device-detail">Keypad or RFID entry, logs access, restricts children during business hours.</div>
+          <div class="device-tags"><span class="tag tag-zigbee">Zigbee</span></div>
+        </div>
+        <div class="device-card c-green">
+          <div class="device-name">UPS for Office Equipment</div>
+          <div class="device-detail">Ensures workstation, NAS, and networking remain online during power interruptions.</div>
+          <div class="device-tags"><span class="tag tag-wired">Wired</span></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── SECTION 7: ROBOTICS ── -->
+    <div class="section" id="robotics">
+      <div class="section-header">
+        <div class="section-number">07</div>
+        <div class="section-title">Robotics</div>
+        <div class="section-badge badge-robotics">Automation</div>
+      </div>
+      <div class="device-grid">
+        <div class="device-card c-purple">
+          <div class="device-name">Robot Vacuum + Mop (Multi-floor)</div>
+          <div class="device-detail">LiDAR mapping, per-room zone cleaning, scheduled runs, auto-empty base. Integration for "leaving home" trigger.</div>
+          <div class="device-tags"><span class="tag tag-wifi">WiFi</span><span class="tag tag-ai">AI</span></div>
+        </div>
+        <div class="device-card c-purple">
+          <div class="device-name">Automated Lawn Mower</div>
+          <div class="device-detail">GPS/RTK boundary, rain-sensor pause, scheduled mowing, returns to dock. Front and back garden.</div>
+          <div class="device-tags"><span class="tag tag-wifi">WiFi</span><span class="tag tag-ai">AI</span></div>
+        </div>
+        <div class="device-card c-purple">
+          <div class="device-name">Pool / Pond Cleaning Robot</div>
+          <div class="device-detail">Automated pool floor and wall scrubbing. Scheduled runs, filter status monitoring.</div>
+          <div class="device-tags"><span class="tag tag-wifi">WiFi</span></div>
+        </div>
+        <div class="device-card c-purple">
+          <div class="device-name">Window Cleaning Robot</div>
+          <div class="device-detail">Automated exterior window cleaning for high or hard-to-reach windows.</div>
+          <div class="device-tags"><span class="tag tag-wifi">WiFi</span></div>
+        </div>
+        <div class="device-card c-purple">
+          <div class="device-name">Smart Rubbish / Waste Sorting Robot</div>
+          <div class="device-detail">Auto-sort recyclables. Compacting, fill-level alert, scheduled collection reminder.</div>
+          <div class="device-tags"><span class="tag tag-wifi">WiFi</span></div>
+        </div>
+        <div class="device-card c-purple">
+          <div class="device-name">Automated Parcel / Delivery Bot</div>
+          <div class="device-detail">Doorstep parcel collection, secure indoor storage, notify owner on delivery.</div>
+          <div class="device-tags"><span class="tag tag-ai">AI</span><span class="tag tag-wifi">WiFi</span></div>
+        </div>
+        <div class="device-card c-purple">
+          <div class="device-name">Pet Feeder Robot</div>
+          <div class="device-detail">Scheduled feeding, portion control, camera monitoring, remote treat dispensing.</div>
+          <div class="device-tags"><span class="tag tag-wifi">WiFi</span></div>
+        </div>
+        <div class="device-card c-purple">
+          <div class="device-name">Humanoid / Mobile Home Robot (Future)</div>
+          <div class="device-detail">Planning space and charging dock for emerging household AI robots (Samsung Bot, Figure, etc.).</div>
+          <div class="device-tags"><span class="tag tag-ai">AI</span><span class="tag tag-wifi">WiFi</span></div>
+        </div>
+      </div>
+      <div class="notes-block">
+        <strong>Robotics Planning Note:</strong> Robot docking and charging locations to be mapped on 3D floorplan. Power outlets and WiFi coverage confirmed in all operating zones. Clearance zones planned in furniture layout.
+      </div>
+    </div>
+
+    <!-- ── SECTION 8: ELECTRONICS ── -->
+    <div class="section" id="electronics">
+      <div class="section-header">
+        <div class="section-number">08</div>
+        <div class="section-title">Consumer Electronics</div>
+        <div class="section-badge badge-electronics">AV & Display</div>
+      </div>
+      <div class="cat-group">
+        <div class="cat-label">Audio / Visual</div>
+        <div class="device-grid">
+          <div class="device-card c-gold">
+            <div class="device-name">Smart TV (Per Living Zone)</div>
+            <div class="device-detail">4K/8K displays integrated with home automation — auto-input switch, "Movie Mode" scene trigger.</div>
+            <div class="device-tags"><span class="tag tag-wifi">WiFi</span></div>
+          </div>
+          <div class="device-card c-gold">
+            <div class="device-name">Projector + Motorised Screen</div>
+            <div class="device-detail">Home cinema room, 4K laser projector. Auto-blinds-close, surround sound, dimmer scene.</div>
+            <div class="device-tags"><span class="tag tag-wired">Wired</span><span class="tag tag-hdmi">HDMI</span></div>
+          </div>
+          <div class="device-card c-gold">
+            <div class="device-name">Multi-Room Audio System</div>
+            <div class="device-detail">Ceiling or in-wall speakers per zone. Synchronised or independent audio. Amplifier + streaming.</div>
+            <div class="device-tags"><span class="tag tag-wired">Wired</span><span class="tag tag-wifi">WiFi</span></div>
+          </div>
+          <div class="device-card c-gold">
+            <div class="device-name">AV Receiver / Matrix Switcher</div>
+            <div class="device-detail">Central AV distribution, HDMI matrix for multi-TV from one source. IR control integration.</div>
+            <div class="device-tags"><span class="tag tag-wired">Wired</span></div>
+          </div>
+          <div class="device-card c-gold">
+            <div class="device-name">Outdoor Audio Speakers</div>
+            <div class="device-detail">Garden, pool deck, patio. Weatherproof, integrated with whole-home audio system.</div>
+            <div class="device-tags"><span class="tag tag-wired">Wired</span><span class="tag tag-wifi">WiFi</span></div>
+          </div>
+          <div class="device-card c-gold">
+            <div class="device-name">Smart Display Panels (Wall)</div>
+            <div class="device-detail">Home control dashboard, 3D floorplan display, family calendar, security camera preview.</div>
+            <div class="device-tags"><span class="tag tag-wifi">WiFi</span><span class="tag tag-poe">PoE</span></div>
+          </div>
+        </div>
+      </div>
+      <div class="cat-group">
+        <div class="cat-label">Smart Home Control Interfaces</div>
+        <div class="device-grid">
+          <div class="device-card c-gold">
+            <div class="device-name">In-Wall Touch Panels</div>
+            <div class="device-detail">Per-room 4" or 7" touch panels. Room scene control, AC, blinds, music. Replaces multiple switches.</div>
+            <div class="device-tags"><span class="tag tag-poe">PoE</span><span class="tag tag-wired">Wired</span></div>
+          </div>
+          <div class="device-card c-gold">
+            <div class="device-name">Smart Bedside Controllers</div>
+            <div class="device-detail">Goodnight / Wake-up scenes, nightlight, AC, blinds — all from bedside. Per-side independent.</div>
+            <div class="device-tags"><span class="tag tag-zigbee">Zigbee</span><span class="tag tag-wifi">WiFi</span></div>
+          </div>
+          <div class="device-card c-gold">
+            <div class="device-name">Smart Remotes / Scene Buttons</div>
+            <div class="device-detail">4–8 button wireless remotes for guests and children. No app required to control common scenes.</div>
+            <div class="device-tags"><span class="tag tag-zigbee">Zigbee</span><span class="tag tag-matter">Matter</span></div>
+          </div>
+        </div>
+      </div>
+      <div class="cat-group">
+        <div class="cat-label">Kitchen & Wellness</div>
+        <div class="device-grid">
+          <div class="device-card c-gold">
+            <div class="device-name">Smart Weighing Scale</div>
+            <div class="device-detail">Body composition tracking, syncs to health dashboard. Family profiles.</div>
+            <div class="device-tags"><span class="tag tag-wifi">WiFi</span></div>
+          </div>
+          <div class="device-card c-gold">
+            <div class="device-name">Smart Sleep Tracker</div>
+            <div class="device-detail">Non-wearable under-mattress sensor. Sleep stage tracking feeds automation (AC, blinds, alarms).</div>
+            <div class="device-tags"><span class="tag tag-wifi">WiFi</span></div>
+          </div>
+          <div class="device-card c-gold">
+            <div class="device-name">Smart Mirror (Bathroom)</div>
+            <div class="device-detail">Integrated display — weather, calendar, traffic, health snapshot. Anti-fog, lighting control.</div>
+            <div class="device-tags"><span class="tag tag-wifi">WiFi</span><span class="tag tag-wired">Wired</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </main>
+</div>
+
+<!-- FOOTER -->
+<div class="footer">
+  <span>AutoLifeTech</span> · Smart Home Architect · Landed Residential Proposal
+  <div>autolifetech.com · +65 9221 2224 (Sky)</div>
+</div>
+
+</body>
+</html>
