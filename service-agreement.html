@@ -1,0 +1,560 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AutoLifeTech - Smart Home Architect Service Agreement</title>
+    <style>
+        :root {
+            --primary: #1a1a2e;
+            --accent: #2979ff;
+            --accent2: #0f3460;
+            --light: #f5f5f7;
+            --card-bg: #ffffff;
+            --text: #333333;
+            --text-light: #666666;
+            --border: #e0e0e0;
+            --gradient: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, sans-serif;
+            color: var(--text); background: var(--light); line-height: 1.7; font-size: 14px;
+        }
+
+        .container { max-width: 900px; margin: 0 auto; padding: 0 30px; }
+
+        /* ── Hero ── */
+        .hero {
+            background: var(--gradient); color: #fff;
+            padding: 50px 0 70px; position: relative; overflow: hidden;
+        }
+        .hero::after {
+            content: ''; position: absolute; bottom: -2px;
+            left: 0; right: 0; height: 60px;
+            background: var(--light); clip-path: ellipse(55% 100% at 50% 100%);
+        }
+        .hero-inner { max-width: 900px; margin: 0 auto; padding: 0 30px; position: relative; z-index: 1; }
+        .hero .brand { font-size: 20px; font-weight: 700; margin-bottom: 30px; opacity: 0.7; }
+        .hero .brand span { color: var(--accent); }
+        .hero h1 { font-size: 32px; font-weight: 800; line-height: 1.2; margin-bottom: 8px; }
+        .hero h1 em { font-style: normal; color: var(--accent); }
+        .hero .doc-type {
+            display: inline-block; background: var(--accent); padding: 4px 16px;
+            border-radius: 4px; font-size: 11px; font-weight: 700;
+            letter-spacing: 2px; text-transform: uppercase; margin-bottom: 20px;
+        }
+
+        /* ── Info Fields ── */
+        .info-grid {
+            display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin: 40px 0;
+        }
+        .info-field {
+            background: var(--card-bg); border-radius: 10px; padding: 16px 20px;
+            border: 1px solid var(--border);
+        }
+        .info-field label {
+            font-size: 11px; font-weight: 700; text-transform: uppercase;
+            letter-spacing: 1px; color: var(--text-light); display: block; margin-bottom: 4px;
+        }
+        .info-field .value {
+            font-size: 16px; font-weight: 600; color: var(--primary);
+            border-bottom: 2px dotted var(--border); min-height: 28px; padding-bottom: 2px;
+        }
+
+        /* ── Sections ── */
+        section { padding: 50px 0; }
+        .alt-bg { background: #fff; }
+        .section-num {
+            display: inline-block; background: var(--accent); color: #fff;
+            width: 32px; height: 32px; border-radius: 50%; text-align: center;
+            line-height: 32px; font-size: 14px; font-weight: 800;
+            margin-right: 10px; vertical-align: middle;
+        }
+        .section-title {
+            font-size: 24px; font-weight: 800; color: var(--primary);
+            margin-bottom: 8px; display: inline; vertical-align: middle;
+        }
+        .section-desc {
+            color: var(--text-light); font-size: 14px; margin-top: 8px; margin-bottom: 30px;
+            max-width: 700px;
+        }
+
+        /* ── Scope Category ── */
+        .scope-cat {
+            background: var(--card-bg); border-radius: 14px; padding: 24px 24px;
+            border: 1px solid var(--border); margin-bottom: 16px;
+            page-break-inside: avoid;
+        }
+        .scope-cat h3 {
+            font-size: 16px; font-weight: 700; color: var(--primary);
+            margin-bottom: 4px; display: flex; align-items: center; gap: 10px;
+        }
+        .scope-cat h3 .cat-icon {
+            width: 34px; height: 34px; border-radius: 9px;
+            display: inline-flex; align-items: center; justify-content: center;
+            font-size: 17px; flex-shrink: 0;
+        }
+        .scope-cat .cat-desc {
+            font-size: 13px; color: var(--text-light); margin-bottom: 12px;
+        }
+        .scope-list { list-style: none; padding: 0; columns: 2; column-gap: 24px; }
+        .scope-list li {
+            position: relative; padding-left: 16px; margin-bottom: 4px;
+            font-size: 13px; color: var(--text); break-inside: avoid;
+        }
+        .scope-list li::before {
+            content: ''; position: absolute; left: 0; top: 7px;
+            width: 5px; height: 5px; border-radius: 50%; background: var(--accent);
+        }
+
+        .ic-device { background: #ede7f6; color: #7c4dff; }
+        .ic-elec { background: #fff3e0; color: #ff6d00; }
+        .ic-ai { background: #e3f2fd; color: #2979ff; }
+        .ic-office { background: #e8f5e9; color: #2e7d32; }
+        .ic-robot { background: #e8f5e9; color: #388e3c; }
+        .ic-entertain { background: #f3e5f5; color: #9c27b0; }
+        .ic-safety { background: #e8eaf6; color: #37474f; }
+        .ic-network { background: #e0f2f1; color: #00897b; }
+
+        /* ── Deliverables ── */
+        .del-grid {
+            display: grid; grid-template-columns: 1fr; gap: 14px;
+        }
+        .del-item {
+            background: var(--card-bg); border-radius: 10px; padding: 20px 22px;
+            border: 1px solid var(--border); border-left: 4px solid var(--accent2);
+        }
+        .del-item h4 { font-size: 15px; font-weight: 700; color: var(--primary); margin-bottom: 4px; }
+        .del-item p { font-size: 13px; color: var(--text-light); }
+        .del-item .del-note {
+            font-size: 12px; color: var(--accent2); font-style: italic; margin-top: 4px;
+        }
+
+        /* ── Exclusions ── */
+        .excl-list { list-style: none; padding: 0; }
+        .excl-list li {
+            padding: 10px 16px; margin-bottom: 6px;
+            background: #f5f5f7; border-radius: 8px; border: 1px solid var(--border);
+            font-size: 13px; color: var(--text-light); position: relative; padding-left: 36px;
+        }
+        .excl-list li::before {
+            content: '\2014'; position: absolute; left: 14px; top: 10px;
+            font-weight: 700; font-size: 14px; color: #999;
+        }
+
+        /* ── Milestone Table ── */
+        .milestone-table {
+            width: 100%; border-collapse: collapse; border-radius: 14px;
+            overflow: hidden; border: 1px solid var(--border); margin-top: 20px;
+        }
+        .milestone-table thead { background: var(--gradient); color: #fff; }
+        .milestone-table th {
+            padding: 14px 18px; text-align: left; font-size: 12px;
+            font-weight: 700; letter-spacing: 0.5px;
+        }
+        .milestone-table td {
+            padding: 16px 18px; font-size: 13px; border-bottom: 1px solid #f0f0f0;
+            vertical-align: top;
+        }
+        .milestone-table tbody tr:hover { background: #fafafe; }
+        .milestone-table .ms-num {
+            display: inline-block; background: var(--accent); color: #fff;
+            width: 26px; height: 26px; border-radius: 50%; text-align: center;
+            line-height: 26px; font-size: 12px; font-weight: 800;
+        }
+        .milestone-table .ms-amount {
+            font-size: 18px; font-weight: 800; color: var(--primary);
+        }
+        .milestone-table .bonus-row { background: #f3e5f5; }
+        .milestone-table .bonus-row td { border-bottom: none; }
+        .milestone-table .total-row {
+            background: var(--primary); color: #fff; font-weight: 800;
+        }
+        .milestone-table .total-row td { border: none; padding: 16px 18px; }
+
+        /* ── Terms ── */
+        .terms-list { counter-reset: term; list-style: none; padding: 0; }
+        .terms-list > li {
+            margin-bottom: 14px; padding: 16px 20px;
+            background: var(--card-bg); border-radius: 10px;
+            border: 1px solid var(--border);
+        }
+        .terms-list > li h4 {
+            font-size: 14px; font-weight: 700; color: var(--primary); margin-bottom: 4px;
+            counter-increment: term;
+        }
+        .terms-list > li h4::before {
+            content: counter(term, decimal) ". ";
+            color: var(--accent); font-weight: 800;
+        }
+        .terms-list > li p { font-size: 13px; color: var(--text-light); }
+
+        /* ── Signature ── */
+        .sig-grid {
+            display: grid; grid-template-columns: 1fr 1fr; gap: 40px; margin-top: 30px;
+        }
+        .sig-block { border-top: 2px solid var(--primary); padding-top: 16px; }
+        .sig-block h4 { font-size: 14px; font-weight: 700; color: var(--primary); margin-bottom: 14px; }
+        .sig-line {
+            border-bottom: 1px dotted var(--border); padding: 8px 0;
+            font-size: 13px; color: var(--text-light); min-height: 32px;
+        }
+        .sig-line span { font-weight: 600; color: var(--text); }
+
+        /* ── Footer ── */
+        footer {
+            background: var(--primary); color: rgba(255,255,255,0.7);
+            text-align: center; padding: 30px; font-size: 13px;
+        }
+        footer strong { color: #fff; }
+
+        @media print {
+            body { background: #fff; font-size: 12px; }
+            .hero { padding: 30px 0 40px; } .hero::after { display: none; }
+            section { padding: 30px 0; }
+            .scope-cat { break-inside: avoid; }
+            footer { background: #fff; color: var(--text); border-top: 2px solid var(--primary); }
+        }
+        @media (max-width: 600px) {
+            .info-grid, .sig-grid { grid-template-columns: 1fr; }
+            .scope-list { columns: 1; }
+        }
+    </style>
+</head>
+<body>
+
+<!-- ════════════════════ HERO ════════════════════ -->
+<header class="hero">
+    <div class="hero-inner">
+        <div class="brand">Auto<span>Life</span>Tech</div>
+        <div class="doc-type">Service Agreement</div>
+        <h1>Smart Home Architect<br><em>Planning &amp; Consultation</em></h1>
+    </div>
+</header>
+
+<!-- ════════════════════ CLIENT INFO ════════════════════ -->
+<section>
+    <div class="container">
+        <div class="info-grid">
+            <div class="info-field">
+                <label>Client Name(s)</label>
+                <div class="value">David and Shirley</div>
+            </div>
+            <div class="info-field">
+                <label>Property Address</label>
+                <div class="value">15 Jalan Merlimau, Singapore 308705</div>
+            </div>
+        </div>
+
+        <p style="color:var(--text-light); font-size:13px; line-height:1.7;">
+            This Service Agreement (<strong>"Agreement"</strong>) is entered into between <strong>AutoLifeTech</strong> (<strong>"Service Provider"</strong>) and the Client named above (<strong>"Client"</strong>) for the provision of Smart Home Architecture planning and consultation services as described herein. The Service Provider will work collaboratively with the Client's appointed electrical company to ensure all recommendations are implemented correctly.
+        </p>
+        <p style="color:var(--accent2); font-size:13px; font-weight:600; margin-top:12px;">
+            This agreement is valid for 14 days from the date above. After this period, terms and pricing are subject to review.
+        </p>
+    </div>
+</section>
+
+
+<!-- ════════════════════ SCOPE OF SERVICES ════════════════════ -->
+<section class="alt-bg">
+    <div class="container">
+        <span class="section-num">1</span>
+        <h2 class="section-title">Scope of Services</h2>
+        <p class="section-desc">AutoLifeTech will provide professional planning, consultation, and device recommendations across the following domains. All recommendations will be coordinated with the Client's appointed electrical company for implementation.</p>
+
+        <!-- A. Smart Device Planning -->
+        <div class="scope-cat">
+            <h3><span class="cat-icon ic-device">&#x1F4F1;</span> A. Smart Device Planning</h3>
+            <p class="cat-desc">Device selection, connectivity, and placement recommendations for the entire property.</p>
+            <ul class="scope-list">
+                <li>Device type selection &amp; specification</li>
+                <li>Connectivity planning (Zigbee, Z-Wave, WiFi, Thread, Matter)</li>
+                <li>Location planning &amp; placement optimization</li>
+                <li>Smart lighting (switches, dimmers, LED strips, motion sensors)</li>
+                <li>Smart plugs &amp; power monitoring</li>
+                <li>Smart locks &amp; access control (keypad, fingerprint, NFC)</li>
+                <li>Smart blinds &amp; motorized curtains</li>
+                <li>Smart aircon &amp; fan control</li>
+                <li>Smart speakers &amp; voice assistants</li>
+                <li>Smart sensors (door/window, motion, water leak, smoke, humidity)</li>
+                <li>Water irrigation control (smart sprinklers, soil moisture sensors, zone scheduling)</li>
+                <li>Smart garage door control</li>
+            </ul>
+        </div>
+
+        <!-- B. Electrical Planning -->
+        <div class="scope-cat">
+            <h3><span class="cat-icon ic-elec">&#x26A1;</span> B. Electrical Planning</h3>
+            <p class="cat-desc">Electrical requirements and recommendations to be coordinated with the appointed electrician.</p>
+            <ul class="scope-list">
+                <li>Electrical load assessment for smart devices</li>
+                <li>Dedicated circuit recommendations</li>
+                <li>Smart panel / smart breaker recommendations</li>
+                <li>EV charger placement planning</li>
+                <li>Backup power (UPS) for critical systems</li>
+                <li>Outlet placement for smart devices</li>
+                <li>Low-voltage wiring recommendations (12V/24V DC)</li>
+                <li>Surge protection planning</li>
+            </ul>
+        </div>
+
+        <!-- C. AI & Automation -->
+        <div class="scope-cat">
+            <h3><span class="cat-icon ic-ai">&#x1F916;</span> C. AI &amp; Automation</h3>
+            <p class="cat-desc">Automation design and AI-powered features for an intelligent, adaptive home.</p>
+            <ul class="scope-list">
+                <li>Automation rule design (scenes, routines, schedules)</li>
+                <li>Voice assistant ecosystem planning</li>
+                <li>AI camera analytics (person detection, LPR, package detection)</li>
+                <li>Geofencing automation (arrive/leave triggers)</li>
+                <li>Smart notification &amp; alert setup</li>
+                <li>Presence detection &amp; occupancy awareness</li>
+            </ul>
+        </div>
+
+        <!-- D. Home Business Office -->
+        <div class="scope-cat">
+            <h3><span class="cat-icon ic-office">&#x1F4BC;</span> D. Home Business Office</h3>
+            <p class="cat-desc">Professional home office optimized for productivity and business operations.</p>
+            <ul class="scope-list">
+                <li>Dedicated network segment for business</li>
+                <li>Video conferencing optimization (lighting, audio)</li>
+                <li>UPS / power backup for office equipment</li>
+                <li>Smart lighting for video calls</li>
+                <li>Printer &amp; scanner network integration</li>
+                <li>Secure remote access planning</li>
+            </ul>
+        </div>
+
+        <!-- E. Robotics -->
+        <div class="scope-cat">
+            <h3><span class="cat-icon ic-robot">&#x1F9BE;</span> E. Robotics</h3>
+            <p class="cat-desc">Autonomous robotic systems for household maintenance and upkeep.</p>
+            <ul class="scope-list">
+                <li>Robot vacuum &amp; mop planning (mapping, scheduling)</li>
+                <li>Lawn mowing robot planning</li>
+                <li>Pool cleaning robot integration</li>
+                <li>Charging station placement &amp; power planning</li>
+                <li>Integration with home automation platform</li>
+            </ul>
+        </div>
+
+        <!-- F. Electronics & Entertainment -->
+        <div class="scope-cat">
+            <h3><span class="cat-icon ic-entertain">&#x1F3AC;</span> F. Electronics &amp; Entertainment</h3>
+            <p class="cat-desc">Audio, video, and entertainment system recommendations for the home.</p>
+            <ul class="scope-list">
+                <li>Home theater / media room planning</li>
+                <li>Multi-room audio system design</li>
+                <li>TV &amp; display integration</li>
+                <li>Outdoor entertainment (weatherproof speakers, outdoor TV)</li>
+                <li>Intercom &amp; PA system planning</li>
+                <li>HDMI distribution &amp; AV switching</li>
+            </ul>
+        </div>
+
+        <!-- G. Safety & Security -->
+        <div class="scope-cat">
+            <h3><span class="cat-icon ic-safety">&#x1F6E1;</span> G. Safety &amp; Security</h3>
+            <p class="cat-desc">Security and life-safety system planning for comprehensive property protection.</p>
+            <ul class="scope-list">
+                <li>CCTV camera placement planning (indoor &amp; outdoor)</li>
+                <li>AI-powered surveillance (person, vehicle detection)</li>
+                <li>License plate recognition (LPR) system</li>
+                <li>Smart doorbell / video intercom planning</li>
+                <li>Alarm system recommendations (intrusion, panic)</li>
+                <li>Smart smoke &amp; CO detectors</li>
+                <li>Water leak detection sensors</li>
+                <li>Security camera storage planning (NVR vs cloud)</li>
+                <li>Surge &amp; lightning protection for smart systems</li>
+            </ul>
+        </div>
+
+        <!-- H. Network & WiFi -->
+        <div class="scope-cat">
+            <h3><span class="cat-icon ic-network">&#x1F310;</span> H. Network &amp; WiFi</h3>
+            <p class="cat-desc">Reliable network infrastructure design for all smart devices and connectivity needs.</p>
+            <ul class="scope-list">
+                <li>Network topology design (wired + wireless)</li>
+                <li>WiFi access point placement &amp; coverage planning</li>
+                <li>Network switch &amp; rack planning</li>
+                <li>VLAN segmentation (IoT, business, guest, CCTV)</li>
+                <li>Firewall &amp; security planning</li>
+                <li>PoE (Power over Ethernet) planning</li>
+                <li>Smart home hub selection</li>
+                <li>Structured cabling plan (CAT6a / fiber)</li>
+                <li>Outdoor WiFi coverage (garden, driveway)</li>
+            </ul>
+        </div>
+    </div>
+</section>
+
+
+<!-- ════════════════════ DELIVERABLES & MILESTONES ════════════════════ -->
+<section>
+    <div class="container">
+        <span class="section-num">2</span>
+        <h2 class="section-title">Deliverables &amp; Payment Milestones</h2>
+        <p class="section-desc">The project is structured into three milestones. Each milestone has defined deliverables and payment due upon completion. Total agreement value: <strong>SGD $88,000</strong>.</p>
+
+        <table class="milestone-table">
+            <thead>
+                <tr>
+                    <th style="width:12%">Milestone</th>
+                    <th style="width:15%">Timeline</th>
+                    <th style="width:43%">Deliverables</th>
+                    <th style="width:15%; text-align:right;">Payment</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><span class="ms-num">1</span></td>
+                    <td><strong>Within 5 days</strong><br><span style="font-size:12px; color:var(--text-light);">from confirmation</span></td>
+                    <td>
+                        <strong>Electrical Requirements Document</strong><br>
+                        <span style="font-size:12px; color:var(--text-light);">Circuit load analysis, dedicated circuit list, and outlet placement recommendations for the appointed electrician.</span>
+                        <br><br>
+                        <strong>Network Topology Diagram</strong><br>
+                        <span style="font-size:12px; color:var(--text-light);">Visual network architecture showing switches, access points, VLANs, and device connectivity. To be coordinated with the appointed electrical company for cabling implementation.</span>
+                    </td>
+                    <td style="text-align:right;"><span class="ms-amount">$30,000</span></td>
+                </tr>
+                <tr>
+                    <td><span class="ms-num">2</span></td>
+                    <td><strong>Within 60 days</strong><br><span style="font-size:12px; color:var(--text-light);">from confirmation</span></td>
+                    <td>
+                        <strong>Smart Home Master Plan</strong><br>
+                        <span style="font-size:12px; color:var(--text-light);">Comprehensive document covering all smart home systems, device specifications, integration points, automation rules, and phased implementation roadmap.</span>
+                    </td>
+                    <td style="text-align:right;"><span class="ms-amount">$30,000</span></td>
+                </tr>
+                <tr class="bonus-row">
+                    <td><span class="ms-num">3</span></td>
+                    <td><strong>Within 120 days</strong><br><span style="font-size:12px; color:var(--text-light);">from confirmation</span></td>
+                    <td>
+                        <strong>Bonus Deliverable: 3D Digital Twin Art Masterpiece</strong><br>
+                        <span style="font-size:12px; color:var(--text-light);">A detailed 3D digital twin of the property with all smart home systems visualized. This deliverable will commence after all physical installations and programming have been completed.</span>
+                    </td>
+                    <td style="text-align:right;"><span class="ms-amount">$28,000</span></td>
+                </tr>
+                <tr class="total-row">
+                    <td colspan="3" style="text-align:right; font-size:16px; padding-right:20px;">TOTAL AGREEMENT VALUE</td>
+                    <td style="text-align:right; font-size:20px;">$88,000</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <p style="margin-top: 16px; font-size: 12px; color: var(--text-light);">All amounts are in Singapore Dollars (SGD). Payment is due upon delivery of the milestone deliverables. Payment to be made via bank transfer or PayNow within 7 days of invoice date.</p>
+    </div>
+</section>
+
+
+<!-- ════════════════════ EXCLUSIONS ════════════════════ -->
+<section class="alt-bg">
+    <div class="container">
+        <span class="section-num">3</span>
+        <h2 class="section-title">What Is Not Included</h2>
+        <p class="section-desc">The following items are expressly excluded from this Agreement and will require separate engagement if needed.</p>
+
+        <ul class="excl-list">
+            <li>Physical installation, electrical wiring, and mechanical fitting works</li>
+            <li>Purchasing of devices, equipment, or materials on behalf of the Client</li>
+            <li>Ongoing maintenance, support, or monitoring services</li>
+            <li>Structural, civil, or architectural modifications to the property</li>
+            <li>Third-party vendor management or project management during installation</li>
+            <li>Automation programming, device configuration, or firmware setup</li>
+        </ul>
+    </div>
+</section>
+
+
+<!-- ════════════════════ TERMS ════════════════════ -->
+<section>
+    <div class="container">
+        <span class="section-num">4</span>
+        <h2 class="section-title">Terms &amp; Conditions</h2>
+        <p class="section-desc">The following terms govern this engagement between AutoLifeTech and the Client.</p>
+
+        <ul class="terms-list">
+            <li>
+                <h4>Agreement Value</h4>
+                <p>The total fee for the Smart Home Architect service is <strong>SGD $88,000</strong>, payable across three milestones as detailed in Section 2.</p>
+            </li>
+            <li>
+                <h4>Payment Terms</h4>
+                <p>Each milestone payment is due upon delivery of the corresponding deliverables. Payment is to be made via bank transfer or PayNow within <strong>7 days</strong> of invoice date.</p>
+            </li>
+            <li>
+                <h4>Revisions &amp; Acceptance</h4>
+                <p>Each milestone deliverable includes up to <strong>5 rounds of revisions</strong>. Upon delivery of each milestone deliverable, the Client has <strong>5 business days</strong> to submit a written request for revision. If no written revision request is received within this period, the deliverable shall be deemed accepted by the Client.</p>
+            </li>
+            <li>
+                <h4>Collaboration with Electrical Company</h4>
+                <p>The Service Provider will provide recommendations and documentation based on smart home device requirements. The Client's appointed electrical company is responsible for all physical electrical work. The Service Provider will coordinate with the electrical company to ensure recommendations are understood and implemented correctly.</p>
+            </li>
+            <li>
+                <h4>Confidentiality</h4>
+                <p>Both parties agree to keep all information exchanged during this engagement confidential. The Service Provider will not disclose the Client's property details, floor plans, or security arrangements to any third party without written consent.</p>
+            </li>
+            <li>
+                <h4>Intellectual Property</h4>
+                <p>Upon full payment, all deliverables and planning documents become the property of the Client. The Service Provider retains the right to use anonymized project details for portfolio purposes unless the Client objects in writing.</p>
+            </li>
+            <li>
+                <h4>Limitation of Liability</h4>
+                <p>The Service Provider's liability is limited to the total fee paid. The Service Provider is not liable for any issues arising from third-party installation, product defects, or deviation from the recommended plan.</p>
+            </li>
+            <li>
+                <h4>Termination</h4>
+                <p>Either party may terminate this Agreement with <strong>14 days written notice</strong>. In the event of termination, the Client will pay for milestones already delivered. Payments made for completed milestones are non-refundable.</p>
+            </li>
+            <li>
+                <h4>Governing Law</h4>
+                <p>This Agreement is governed by the laws of the Republic of Singapore.</p>
+            </li>
+        </ul>
+    </div>
+</section>
+
+
+<!-- ════════════════════ SIGNATURES ════════════════════ -->
+<section class="alt-bg">
+    <div class="container">
+        <span class="section-num">5</span>
+        <h2 class="section-title">Acceptance &amp; Signatures</h2>
+        <p class="section-desc">By signing below, both parties agree to the terms and conditions set forth in this Agreement.</p>
+
+        <div class="sig-grid">
+            <div class="sig-block">
+                <h4>Service Provider &mdash; AutoLifeTech</h4>
+                <div class="sig-line"><span>Name:</span> Clement Koh (SKY)</div>
+                <div class="sig-line"><span>Designation:</span> Director</div>
+                <div class="sig-line"><span>Signature:</span> &nbsp;</div>
+                <div class="sig-line"><span>Date:</span> &nbsp;</div>
+            </div>
+            <div class="sig-block">
+                <h4>Client &mdash; Property Owner</h4>
+                <div class="sig-line"><span>Name:</span> David Wee</div>
+                <div class="sig-line"><span>Signature:</span> &nbsp;</div>
+                <div class="sig-line"><span>Date:</span> &nbsp;</div>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+<!-- ════════════════════ FOOTER ════════════════════ -->
+<footer>
+    <div class="container">
+        <p><strong>AutoLifeTech</strong> &mdash; Smart Home Architecture &amp; Consultation</p>
+        <p style="margin-top: 6px;">&#x1F4AC; <a href="https://wa.me/6592212224" target="_blank" style="color:#fff; text-decoration:none; font-weight:700;">+65 9221 2224</a></p>
+        <p style="margin-top: 6px; font-size: 11px; opacity: 0.5;">Service Agreement &bull; Version 1.0 &bull; April 2026</p>
+    </div>
+</footer>
+
+</body>
+</html>
